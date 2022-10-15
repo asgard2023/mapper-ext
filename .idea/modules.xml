@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mapper-ext/mapper-ext.iml" filepath="$PROJECT_DIR$/mapper-ext/mapper-ext.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mapper-ext-demo/mapper-ext-demo.iml" filepath="$PROJECT_DIR$/mapper-ext-demo/mapper-ext-demo.iml" />
+    </modules>
+  </component>
+</project>
