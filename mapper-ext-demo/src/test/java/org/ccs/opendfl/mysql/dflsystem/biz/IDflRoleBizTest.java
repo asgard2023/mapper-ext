@@ -21,7 +21,7 @@ public class IDflRoleBizTest {
     void getDataById() {
         DflRolePo dflRolePo = dflRoleBiz.getDataById(4, "ifDel,createTime,createUser");
         System.out.println(JSONUtil.toJsonStr(dflRolePo));
-        Assertions.assertEquals("test", dflRolePo.getCode());
+        Assertions.assertEquals("test22", dflRolePo.getCode());
         Assertions.assertNull(dflRolePo.getIfDel(), "ifDel ignored");
 
         dflRolePo = dflRoleBiz.getDataById(4, "ifDel,createTime");
