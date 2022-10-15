@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/mapper-ext/mapper-ext.iml" filepath="$PROJECT_DIR$/mapper-ext/mapper-ext.iml" />
       <module fileurl="file://$PROJECT_DIR$/mapper-ext-demo/mapper-ext-demo.iml" filepath="$PROJECT_DIR$/mapper-ext-demo/mapper-ext-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mapper-ext-parent.iml" filepath="$PROJECT_DIR$/mapper-ext-parent.iml" />
     </modules>
   </component>
 </project>
