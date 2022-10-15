@@ -49,9 +49,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:abel533/Mapper.git</connection>
-        <developerConnection>scm:git@github.com:abel533/Mapper.git</developerConnection>
-        <url>git@github.com:abel533/Mapper.git</url>
+        <connection>scm:git@github.com:asgard2023/mapper-ext.git</connection>
+        <developerConnection>scm:git@github.com:asgard2023/mapper-ext.git</developerConnection>
+        <url>git@github.com:asgard2023/mapper-ext.git</url>
     </scm>
 
     <properties>
