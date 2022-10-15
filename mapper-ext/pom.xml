@@ -32,12 +32,12 @@
 
     <name>mapper-ext</name>
     <description>Mybatis通用Mapper扩展功能</description>
-    <url>http://www.mybatis.tk</url>
+    <url>http://www.opendfl.org.cn</url>
 
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>https://github.com/abel533/Mapper/blob/master/LICENSE</url>
+            <url>https://github.com/asgard2023/mapper-ext/blob/master/LICENSE</url>
         </license>
     </licenses>
 
@@ -49,9 +49,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:abel533/Mapper.git</connection>
-        <developerConnection>scm:git@github.com:abel533/Mapper.git</developerConnection>
-        <url>git@github.com:abel533/Mapper.git</url>
+        <connection>scm:git@github.com:asgard2023/mapper-ext.git</connection>
+        <developerConnection>scm:git@github.com:asgard2023/mapper-ext.git</developerConnection>
+        <url>git@github.com:asgard2023/mapper-ext.git</url>
     </scm>
 
     <properties>
