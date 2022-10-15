@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.org.opendfl</groupId>
     <artifactId>mapper-ext-demo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <name>mapper-ext-demo</name>
     <packaging>jar</packaging>
     <description>mapper-ext-demo</description>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-ext</artifactId>
-            <version>1</version>
+            <version>3</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.mybatis.spring.boot</groupId>-->
