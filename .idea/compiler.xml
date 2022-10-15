@@ -13,6 +13,7 @@
     <bytecodeTargetLevel>
       <module name="mapper-ext" target="1.8" />
       <module name="mapper-ext-demo" target="1.8" />
+      <module name="mapper-ext-parent" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
