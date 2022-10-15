@@ -21,7 +21,7 @@ public class IDflResourceBizTest {
     void getDataById() {
         DflResourcePo dflUserPo = dflResourceBiz.getDataById(5, "ifDel,createTime,createUser");
         System.out.println(JSONUtil.toJsonStr(dflUserPo));
-        Assertions.assertEquals("test", dflUserPo.getUri());
+        Assertions.assertEquals("test_2bb", dflUserPo.getUri());
         Assertions.assertNull(dflUserPo.getIfDel(), "ifDel ignored");
     }
 }

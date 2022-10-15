@@ -32,12 +32,12 @@
 
     <name>mapper-ext</name>
     <description>Mybatis通用Mapper扩展功能</description>
-    <url>http://www.mybatis.tk</url>
+    <url>http://www.opendfl.org.cn</url>
 
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>https://github.com/abel533/Mapper/blob/master/LICENSE</url>
+            <url>https://gitee.com/asgards/mapper-ext/blob/master/LICENSE</url>
         </license>
     </licenses>
 
