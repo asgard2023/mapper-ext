@@ -7,6 +7,9 @@ http://localhost:8080/doc.html
 # 基于tk.mybatis mapper
 见： https://gitee.com/free/Mapper
 
+## 目标
+* 支持对常用功能的统计，查询，以简化查询功能。
+* 增加一些新特性。
 
 ## 功能特性
 * 支持selectIds select id from table_name where condition
