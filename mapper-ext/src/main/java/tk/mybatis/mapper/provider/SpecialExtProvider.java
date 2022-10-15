@@ -38,59 +38,38 @@ public class SpecialExtProvider extends SpecialProvider{
                 }
             }
         }
-//    	System.out.println("-----driverName="+driverName);
         isMysql=driverName.toLowerCase().indexOf("mysql")>=0;
         return isMysql;
     }
 
-    /**
-     * 批量插入
-     *
-     * @param ms
-     * @param skipId 是否忽略id
-     */
     public String insertList(MappedStatement ms, boolean skipId) {
-//    	boolean skipId=true;
-        boolean notNull=false;
-        boolean notEmpty=false;
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
         StringBuilder sql = new StringBuilder();
-        sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
-        sql.append(SqlHelper.insertColumns(entityClass, skipId, notNull, notEmpty));
+        sql.append("<bind name=\"listNotEmptyCheck\" value=\"@tk.mybatis.mapper.util.OGNL@notEmptyCollectionCheck(list, '" + ms.getId() + " 方法参数为空')\"/>");
+        sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass), "list[0]"));
+        sql.append(SqlHelper.insertColumns(entityClass, skipId, false, false));
         sql.append(" VALUES ");
         sql.append("<foreach collection=\"list\" item=\"record\" separator=\",\" >");
         sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
-        String columnHolder=null;
         for (EntityColumn column : columnList) {
-            if (!column.isInsertable()) {
-                continue;
-            }
-            if (skipId && column.isId()) {
-                continue;
-            }
-            columnHolder=column.getColumnHolder("record");
-            // 获取id seqName
-            if (column.isId()) {
-                String	seqName = column.getSequenceName();
-                if (seqName != null && seqName.startsWith("select")) {
-                    seqName = seqName.substring("select".length());
-                }
-//				sql.append(seqName + ",");
-                sql.append(SqlHelper.getIfIsNull("record", column, seqName + " ,", notEmpty));
-                sql.append(SqlHelper.getIfNotNull("record", column, columnHolder + " ,", notEmpty));
-            }
-            else{
-                sql.append(columnHolder + ",");
+            if (!column.isId() && column.isInsertable()) {
+                sql.append(column.getColumnHolder("record") + ",");
             }
         }
         sql.append("</trim>");
         sql.append("</foreach>");
+
+        // 反射把MappedStatement中的设置主键名
+        EntityHelper.setKeyProperties(EntityHelper.getPKColumns(entityClass), ms);
+
         return sql.toString();
     }
+
+
 
     public String insertListById(MappedStatement ms) {
         return this.insertList(ms, true);

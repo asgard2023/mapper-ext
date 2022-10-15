@@ -101,7 +101,6 @@ public class MapperScannerExtConfigurer extends org.mybatis.spring.mapper.Mapper
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
         super.postProcessBeanDefinitionRegistry(registry);
         //如果没有注册过接口，就注册默认的Mapper接口
-        this.mapperHelper.ifEmptyRegisterDefaultInterface();
         String[] names = registry.getBeanDefinitionNames();
         GenericBeanDefinition definition;
         for (String name : names) {

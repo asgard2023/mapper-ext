@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.org.opendfl</groupId>
     <artifactId>mapper-ext</artifactId>
-    <version>1</version>
+    <version>4</version>
     <packaging>jar</packaging>
 
     <name>mapper-ext</name>
@@ -81,29 +81,19 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper</artifactId>
-            <version>3.5.3</version>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.4</version>
         </dependency>
-        <!--可选依赖-->
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.2.4</version>
-            <scope>compile</scope>
-            <optional>true</optional>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>4.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>4.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>1.2.4</version>
-            <scope>compile</scope>
-            <optional>true</optional>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.1</version>
         </dependency>
 
         <!--测试-->

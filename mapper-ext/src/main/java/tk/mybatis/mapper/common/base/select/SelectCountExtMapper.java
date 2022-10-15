@@ -25,7 +25,7 @@ public interface SelectCountExtMapper<T> {
     @SelectProvider(type = BaseSelectExtProvider.class, method = "dynamicSQL")
     Long selectMaxId(T record);
 
-    @Options(useCache = false, flushCache = true)
+    @Options(useCache = false, flushCache = Options.FlushCachePolicy.TRUE)
     @SelectProvider(type = BaseSelectExtProvider.class, method = "dynamicSQL")
     List<Long> selectIds(T record);
 }
