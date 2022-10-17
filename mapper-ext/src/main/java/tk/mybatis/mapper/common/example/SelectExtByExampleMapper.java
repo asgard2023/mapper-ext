@@ -39,7 +39,7 @@ public interface SelectExtByExampleMapper<T> {
 
     /**
      * 主要用于检查数据是否存在，直接取第一条，免count
-     * select 1 from table_name limit 1
+     * select exists(select 1 from table_name limit 1)
      * @param example
      * @return
      */

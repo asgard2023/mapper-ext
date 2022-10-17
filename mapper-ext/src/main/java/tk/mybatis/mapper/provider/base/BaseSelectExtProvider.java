@@ -56,10 +56,10 @@ public class BaseSelectExtProvider extends BaseSelectProvider{
     public String selectCountExist(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
-        sql.append("select 1 ");
+        sql.append("select exists(select 1 ");
         sql.append(SqlExtHelper.fromTable(entityClass, tableName(entityClass)));
         sql.append(SqlExtHelper.whereAllIfColumns(entityClass, isNotEmpty()));
-        sql.append(" limit 1");
+        sql.append(" limit 1)");
         return sql.toString();
     }
 
