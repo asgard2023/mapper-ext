@@ -12,7 +12,7 @@ public class ExampleExtProvider extends ExampleProvider {
 
     /**
      * 主要用于检查数据是否存在，直接取第一条，免count
-     * select 1 from table_name limit 1
+     * select exists(select 1 from table_name limit 1)
      *
      * @param ms
      * @return
@@ -23,10 +23,10 @@ public class ExampleExtProvider extends ExampleProvider {
         if (isCheckExampleEntityClass()) {
             sql.append(SqlHelper.exampleCheck(entityClass));
         }
-        sql.append("select 1 ");
+        sql.append("select exists(select 1 ");
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.exampleWhereClause());
-        sql.append(" limit 1");
+        sql.append(" limit 1)");
         return sql.toString();
     }
 

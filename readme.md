@@ -14,8 +14,8 @@ http://localhost:8080/index.html
 ## 功能特性
 * 支持selectIds select id from table_name where condition
 * 支持selectMaxId select max(id) from table_name where condition
-* 支持selectCountExist select 1 from table_name where condition limit 1
-* 支持selectCountExistByExample select 1 from table_name where condition limit 1
+* 支持selectCountExist select exists(select 1 from table_name where condition limit 1)
+* 支持selectCountExistByExample select exists(select 1 from table_name where condition limit 1)
 * 支持selectCountAndMinMaxTimeByExample select count(*) count,min(create_time),max(create_time) from table_name where 
 
 ## 使用
