@@ -34,7 +34,7 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-ext</artifactId>
-            <version>3</version>
+            <version>3.1</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.mybatis.spring.boot</groupId>-->
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.2.4</version>
+            <version>3.4.5</version>
         </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>

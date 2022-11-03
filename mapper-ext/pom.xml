@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.org.opendfl</groupId>
     <artifactId>mapper-ext</artifactId>
-    <version>3</version>
+    <version>3.1</version>
     <packaging>jar</packaging>
 
     <name>mapper-ext</name>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.2.4</version>
+            <version>3.4.5</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>

@@ -49,7 +49,7 @@ public class SpecialExtProvider extends SpecialProvider{
      * @param ms
      * @param skipId 是否忽略id
      */
-    public String insertList(MappedStatement ms, boolean skipId) {
+    private String insertList(MappedStatement ms, boolean skipId) {
 //    	boolean skipId=true;
         boolean notNull=false;
         boolean notEmpty=false;
@@ -93,7 +93,7 @@ public class SpecialExtProvider extends SpecialProvider{
     }
 
     public String insertListById(MappedStatement ms) {
-        return this.insertList(ms, true);
+        return this.insertList(ms, false);
     }
 
     /**
