@@ -150,4 +150,20 @@
             id = #{id}
         </where>
     </delete>
+
+    <select id="countExistRoleXml" resultType="java.lang.Integer">
+        select EXISTS(select 1  FROM dfl_role  WHERE  status = #{status} limit 1) cout
+    </select>
+
+    <select id="findRoleListByDate" resultMap="dflRoleMap">
+        select <include refid="field"></include> from dfl_role
+        where if_del=0 and create_time>=#{startTime}
+        <if test="endTime != null and endTime != ''"> and create_time <![CDATA[<]]> #{endTime} </if>
+    </select>
+
+    <select id="findRoleListByDates" resultMap="dflRoleMap">
+        select <include refid="field"></include> from dfl_role
+        where if_del=0 and create_time>=#{startTime}
+        <if test="endTime != null and endTime != ''"> and create_time <![CDATA[<]]> #{endTime} </if>
+    </select>
 </mapper>

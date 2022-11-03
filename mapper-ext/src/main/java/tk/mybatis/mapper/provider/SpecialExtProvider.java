@@ -72,7 +72,7 @@ public class SpecialExtProvider extends SpecialProvider{
 
 
     public String insertListById(MappedStatement ms) {
-        return this.insertList(ms, true);
+        return this.insertList(ms, false);
     }
 
     /**

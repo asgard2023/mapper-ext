@@ -34,7 +34,7 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-ext</artifactId>
-            <version>4</version>
+            <version>4.1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

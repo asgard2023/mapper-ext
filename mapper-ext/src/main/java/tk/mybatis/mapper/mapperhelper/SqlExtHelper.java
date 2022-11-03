@@ -1,6 +1,9 @@
 package tk.mybatis.mapper.mapperhelper;
 
+import tk.mybatis.mapper.entity.EntityColumn;
+
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class SqlExtHelper extends SqlHelper {
@@ -43,7 +46,23 @@ public class SqlExtHelper extends SqlHelper {
      * @return
      */
     public static String selectMaxId(Class<?> entityClass) {
-        return String.format("SELECT max(%s) ", defaultIdField);
+        String pkColumn = getPkIdColumn(entityClass);
+        return String.format("SELECT max(%s) ", pkColumn);
+    }
+
+    /**
+     * 取第一个ID字段
+     * @param entityClass
+     * @return
+     */
+    public static String getPkIdColumn(Class<?> entityClass) {
+        Set<EntityColumn> columnSet = EntityHelper.getPKColumns(entityClass);
+        Optional<String> firstPkColumn= columnSet.stream().map(EntityColumn::getColumn).findFirst();
+        String pkColumn=defaultIdField;
+        if(firstPkColumn.isPresent()){
+            pkColumn=firstPkColumn.get();
+        }
+        return pkColumn;
     }
 
     public static String selectMaxCreateTime(){

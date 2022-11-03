@@ -23,10 +23,10 @@ public class ExampleExtProvider extends ExampleProvider {
         if (isCheckExampleEntityClass()) {
             sql.append(SqlHelper.exampleCheck(entityClass));
         }
-        sql.append("select exists(select 1 ");
+        sql.append("select ifnull((select 1 ");
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.exampleWhereClause());
-        sql.append(" limit 1)");
+        sql.append(" limit 1),0)");
         return sql.toString();
     }
 
