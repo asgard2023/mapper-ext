@@ -291,12 +291,12 @@ public class RoleMapperTest {
             role.setIfDel(0);
             role.setStatus(1);
             role.setId(50 + i);
-//            this.dflRoleMapper.deleteByPrimaryKey(role.getId());
+            this.dflRoleMapper.deleteByPrimaryKey(role.getId());
             role.setName("test20"+i);
             recordList.add(role);
         }
-        int v = this.dflRoleMapper.insertList(recordList);
-//        int v = this.dflRoleMapper.insertListById(recordList);
+//        int v = this.dflRoleMapper.insertList(recordList);
+        int v = this.dflRoleMapper.insertListById(recordList);
         Assertions.assertTrue(v > 0);
         System.out.println("insert count=" + v);
     }

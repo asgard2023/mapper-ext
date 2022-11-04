@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.ccs.opendfl.mysql.dflsystem.po.DflRolePo;
 import tk.mybatis.mapper.common.MapperMy;
+import tk.mybatis.mapper.common.MapperMy2;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @Author: Created by chenjh
  * @Date: 2022-5-3 20:25:42
  */
-public interface DflRoleMapper extends MapperMy<DflRolePo> {
+public interface DflRoleMapper extends MapperMy2<DflRolePo> {
     /**
      * 用于异常测试，在sharding-jdbc下，广播模式会出错
      * @param status

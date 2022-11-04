@@ -25,6 +25,7 @@
 package tk.mybatis.mapper.common.special;
 
 import org.apache.ibatis.annotations.InsertProvider;
+import tk.mybatis.mapper.annotation.RegisterMapper;
 import tk.mybatis.mapper.provider.SpecialExtProvider;
 
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.List;
  * @param <T> 不能为空
  * @author liuzh
  */
+@RegisterMapper
 public interface InsertListByIdMapper<T> {
 
     /**
