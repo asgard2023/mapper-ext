@@ -8,6 +8,7 @@
 	<version>4.1</version>
 	<packaging>jar</packaging>
 	<description>Mybatis通用Mapper 支持sharding-jdbc，支持@ShardingKey注解</description>
+	<url>https://github.com/asgard2023/mapper-ext.git</url>
 
 	<licenses>
 		<license>

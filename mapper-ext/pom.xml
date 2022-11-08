@@ -32,7 +32,7 @@
 
     <name>mapper-ext</name>
     <description>Mybatis通用Mapper扩展功能</description>
-    <url>http://www.opendfl.org.cn</url>
+    <url>https://github.com/asgard2023/mapper-ext.git</url>
 
     <licenses>
         <license>
