@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mapper-ext-demo" />
+        <module name="mapper-sharding" />
         <module name="mapper-ext" />
       </profile>
     </annotationProcessing>
@@ -14,11 +15,13 @@
       <module name="mapper-ext" target="1.8" />
       <module name="mapper-ext-demo" target="1.8" />
       <module name="mapper-ext-parent" target="1.8" />
+      <module name="mapper-sharding" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="mapper-ext-demo" options="-parameters" />
+      <module name="mapper-sharding" options="" />
     </option>
   </component>
 </project>
