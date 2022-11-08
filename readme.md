@@ -16,6 +16,7 @@ http://localhost:8080/index.html
 * 支持selectCountExist select exists(select 1 from table_name where condition limit 1)
 * 支持selectCountExistByExample select exists(select 1 from table_name where condition limit 1)
 * 支持selectCountAndMinMaxTimeByExample select count(*) count,min(create_time),max(create_time) from table_name where 
+* 支持sharding-jdbc注解，见mapper-sharding模块
 
 ## 使用
 * 配置见：MybatisConfiguration.java,MybatisLoadInit.java
