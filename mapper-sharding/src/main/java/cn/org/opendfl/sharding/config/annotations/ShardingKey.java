@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 可用于biz参数shardingKey校验
  * 仅用于单个分片key的处理，多个会取第一个
- * 需配置com.zyg.sharding.config.algorithm.TbShardingAlgorithm为分片算法
+ * 需配置cn.org.opendfl.sharding.config.algorithm.TbShardingAlgorithm为分片算法
  *
  * @author chenjh
  */
