@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @author chenjh
  */
-public class TbShardingAlgorithm implements PreciseShardingAlgorithm<Long> {
+public class TbShardingKeyAlgorithm implements PreciseShardingAlgorithm<Long> {
 
     @Override
     public String doSharding(Collection<String> tableNames, PreciseShardingValue<Long> shardingValue) {
