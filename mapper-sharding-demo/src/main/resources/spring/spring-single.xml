@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        ">
+    <bean id="dsSingle" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.1.254:3306/ds_single?allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowMultiQueries=true"/>
+        <property name="username" value="single"/>
+        <property name="password" value="jh@123456"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dsSingle"/>
+    </bean>
+
+    <bean id="sqlSessionFactorySingle"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dsSingle"/>
+        <property name="mapperLocations" value="classpath*:mappers/**/*.xml"/>
+
+    </bean>
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.org.opendfl.mysql.dflsystem.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactorySingle"/>
+        <property name="markerInterface" value="tk.mybatis.mapper.common.MapperMy"/>
+    </bean>
+</beans>

@@ -10,8 +10,10 @@
 	<packaging>pom</packaging>
     <modules>
         <module>mapper-ext</module>
-        <module>mapper-sharding</module>
         <module>mapper-ext-demo</module>
+        <module>opendfl-base</module>
+        <module>mapper-sharding</module>
+        <module>mapper-sharding-demo</module>
     </modules>
 
 

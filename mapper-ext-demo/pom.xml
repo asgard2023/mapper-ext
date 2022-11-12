@@ -10,6 +10,7 @@
     <description>mapper-ext-demo</description>
     <properties>
         <java.version>1.8</java.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -34,16 +35,11 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>opendfl-base</artifactId>
-            <version>1</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-ext</artifactId>
-            <version>4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.org.opendfl</groupId>
-            <artifactId>mapper-sharding</artifactId>
             <version>4.1</version>
         </dependency>
         <dependency>

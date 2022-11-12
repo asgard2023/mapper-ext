@@ -26,7 +26,7 @@ spring:
 
 mybatis:
   default-statement-timeout: 3000
-  basePackage: org.ccs.opendfl.mysql
+  basePackage: cn.org.opendfl.mysql
   mapperLocations: classpath:mappers/*/*.xml
   config-location: classpath:mybatis-config.xml
   #表的id属性名
@@ -58,8 +58,8 @@ management:
 logging:
   level:
     root: INFO
-    org:
-      ccs:
+    cn:
+      org:
         opendfl: DEBUG
   pattern:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(-){faint} %clr([%14.14t]){faint} %clr(%-40.40logger.%13.13M){cyan} %clr(%3.3L) %clr(:){faint} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"

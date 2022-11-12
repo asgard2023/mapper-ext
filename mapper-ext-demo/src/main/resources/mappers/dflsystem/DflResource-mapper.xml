@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.ccs.opendfl.mysql.dflsystem.mapper.DflResourceMapper">
-    <resultMap id="dflResourceMap" type="org.ccs.opendfl.mysql.dflsystem.po.DflResourcePo">
+<mapper namespace="cn.org.opendfl.mysql.dflsystem.mapper.DflResourceMapper">
+    <resultMap id="dflResourceMap" type="cn.org.opendfl.mysql.dflsystem.po.DflResourcePo">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="uri" property="uri" jdbcType="VARCHAR"/>
         <result column="uri_id" property="uriId" jdbcType="INTEGER"/>
@@ -118,7 +118,7 @@
         </where>
     </select>
 
-    <insert id="insertXML" parameterType="org.ccs.opendfl.mysql.dflsystem.po.DflResourcePo" useGeneratedKeys="true"
+    <insert id="insertXML" parameterType="cn.org.opendfl.mysql.dflsystem.po.DflResourcePo" useGeneratedKeys="true"
             keyProperty="id" flushCache="true">
         insert dfl_resource
         <trim prefix="(" suffix=")" suffixOverrides=",">

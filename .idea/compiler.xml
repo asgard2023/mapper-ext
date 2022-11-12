@@ -6,22 +6,34 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mapper-ext-demo" />
         <module name="mapper-sharding" />
         <module name="mapper-ext" />
+        <module name="opendfl-base" />
+        <module name="mapper-sharding-demo" />
+        <module name="mapper-ext-demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="mapper-ext" target="1.8" />
       <module name="mapper-ext-demo" target="1.8" />
+      <module name="mapper-ext-demo (1)" target="1.8" />
       <module name="mapper-ext-parent" target="1.8" />
+      <module name="mapper-ext-sharding" target="1.8" />
+      <module name="mapper-ext-sharding-demo" target="1.8" />
       <module name="mapper-sharding" target="1.8" />
+      <module name="mapper-sharding-demo" target="1.8" />
+      <module name="opendfl-base" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="mapper-ext-demo" options="-parameters" />
+      <module name="mapper-ext-demo (1)" options="-parameters" />
+      <module name="mapper-ext-sharding" options="-parameters" />
+      <module name="mapper-ext-sharding-demo" options="-parameters" />
       <module name="mapper-sharding" options="" />
+      <module name="mapper-sharding-demo" options="-parameters" />
+      <module name="opendfl-base" options="-parameters" />
     </option>
   </component>
 </project>

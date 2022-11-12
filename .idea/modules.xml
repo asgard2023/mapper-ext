@@ -4,8 +4,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/mapper-ext/mapper-ext.iml" filepath="$PROJECT_DIR$/mapper-ext/mapper-ext.iml" />
       <module fileurl="file://$PROJECT_DIR$/mapper-ext-demo/mapper-ext-demo.iml" filepath="$PROJECT_DIR$/mapper-ext-demo/mapper-ext-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mapper-ext-sharding-demo/mapper-ext-demo (1).iml" filepath="$PROJECT_DIR$/mapper-ext-sharding-demo/mapper-ext-demo (1).iml" />
       <module fileurl="file://$PROJECT_DIR$/mapper-ext-parent.iml" filepath="$PROJECT_DIR$/mapper-ext-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/mapper-sharding/mapper-sharding.iml" filepath="$PROJECT_DIR$/mapper-sharding/mapper-sharding.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mapper-sharding-demo/mapper-sharding-demo.iml" filepath="$PROJECT_DIR$/mapper-sharding-demo/mapper-sharding-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/opendfl-base/opendfl-base.iml" filepath="$PROJECT_DIR$/opendfl-base/opendfl-base.iml" />
     </modules>
   </component>
 </project>
