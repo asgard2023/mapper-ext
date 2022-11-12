@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!-- 只分表，不分库(混合模式) -->
+    <import resource="classpath:spring/spring-sharding-table.xml"/>
+    <import resource="classpath:spring/spring-single.xml"/>
+    <!-- 正常模式 -->
+    <!--	<import resource="classpath:spring/spring-single.xml" />-->
+</beans>
