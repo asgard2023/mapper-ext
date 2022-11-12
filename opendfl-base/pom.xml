@@ -18,9 +18,9 @@
 
     <!--scm信息-->
     <scm>
-        <url>http://task-tool-demo.opendfl.org.cn/index.html</url>
-        <connection>scm:git@github.com:asgard2023/java-code-generation-tool.git</connection>
-        <developerConnection>scm:git@github.com:asgard2023/java-code-generation-tool.git</developerConnection>
+        <connection>scm:git@github.com:asgard2023/mapper-ext.git</connection>
+        <developerConnection>scm:git@github.com:asgard2023/mapper-ext.git</developerConnection>
+        <url>git@github.com:asgard2023/mapper-ext.git</url>
     </scm>
 
     <!--发布者信息-->
