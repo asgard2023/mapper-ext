@@ -28,6 +28,7 @@ package cn.org.opendfl.base;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.UUID;
 import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
@@ -40,6 +41,7 @@ import java.util.*;
 /**
  * Created by caco on 2017/07/21.
  */
+@Slf4j
 public abstract class BaseService<T> implements IBaseService<T> {
 
     public abstract Mapper<T> getMapper();
@@ -50,19 +52,25 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     /**
-     * 如果cid为null则进行插入并赋值cid，如果不为空则更新（包括空栏位更新）
+     * 如果id为null的String字段，则取uuid
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int save(T entity) {
+        String pkName = null;
+        Object idValue = null;
+        String className = null;
         try {
-            String pkName = BeanUtils.getPKPropertyName(entity.getClass());
-            Object idValue = BeanUtils.getValue(entity, pkName);
-            if (idValue == null || idValue.toString().length() == 0) {
+            className = entity.getClass().getSimpleName();
+            EntityColumn pkColumn = BeanUtils.getPkColumn(entity.getClass());
+            pkName = pkColumn.getProperty();
+            idValue = BeanUtils.getValue(entity, pkName);
+            if (pkColumn.getJavaType() == String.class && (idValue == null || idValue.toString().length() == 0)) {
                 BeanUtils.setValue(entity, pkName, UUID.fastUUID());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("--save {}.{}={} error={}", className, pkName, idValue, e.getMessage(), e);
+            throw new RuntimeException("saveError:" + e.getMessage());
         }
         return getMapper().insert(entity);
     }

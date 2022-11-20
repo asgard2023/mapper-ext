@@ -14,6 +14,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class BeanUtils {
@@ -98,12 +99,31 @@ public class BeanUtils {
      * @throws Exception
      */
     public static String getPKPropertyName(Class<?> entityClass) {
-        Set<EntityColumn> columnList = EntityHelper.getPKColumns(entityClass);
-        if (columnList.size() == 1) {
-            return columnList.iterator().next().getProperty();
-        } else {
-            throw new MapperException("实体类[" + entityClass.getCanonicalName() + "]中必须只有一个带有 @Id 注解的字段");
+        EntityColumn pkColumn=getPkColumn(entityClass);
+        if(pkColumn!=null){
+            return pkColumn.getProperty();
         }
+        return null;
+    }
+
+    private static Map<String, EntityColumn> pkColumnMap=new ConcurrentHashMap<>();
+
+    /**
+     * 获取PO的主键字段
+     * @param entityClass
+     * @return
+     */
+    public static EntityColumn getPkColumn(Class<?> entityClass){
+        String className= entityClass.getName();
+        return pkColumnMap.computeIfAbsent(className, t->{
+            Set<EntityColumn> columnSet = EntityHelper.getPKColumns(entityClass);
+            if(columnSet.size() == 1) {
+                return columnSet.iterator().next();
+            }
+            else{
+                throw new MapperException("实体类[" + entityClass.getCanonicalName() + "]中必须只有一个带有 @Id 注解的字段");
+            }
+        });
     }
 
     /**

@@ -5,7 +5,7 @@
 
 	<groupId>cn.org.opendfl</groupId>
 	<artifactId>mapper-sharding</artifactId>
-	<version>4.2</version>
+	<version>4.3</version>
 	<packaging>jar</packaging>
 
 	<name>mapper-sharding</name>
@@ -56,6 +56,12 @@
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
 			<version>${pagehelper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.22</version>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- 分库分表与mp插件 -->

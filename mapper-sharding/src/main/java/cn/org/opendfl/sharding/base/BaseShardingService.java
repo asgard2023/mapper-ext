@@ -2,18 +2,19 @@
 package cn.org.opendfl.sharding.base;
 
 
-import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
-import com.github.pagehelper.PageHelper;
+import cn.hutool.core.lang.UUID;
 import cn.org.opendfl.base.BeanUtils;
 import cn.org.opendfl.base.IBaseService;
 import cn.org.opendfl.base.MyPageInfo;
+import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
+import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.EntityColumn;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
-import tk.mybatis.mapper.util.IdGenerator;
 import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.*;
@@ -21,6 +22,7 @@ import java.util.*;
 /**
  * Created by chenjh
  */
+@Slf4j
 public abstract class BaseShardingService<T> implements IBaseService<T> {
 
     public abstract Mapper<T> getMapper();
@@ -34,19 +36,25 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
     }
 
     /**
-     * 如果cid为null则进行插入并赋值cid，如果不为空则更新（包括空栏位更新）
+     * 如果id为null的String字段，则取uuid
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int save(T entity) {
+        String pkName = null;
+        Object idValue = null;
+        String className = null;
         try {
-            String pkName = BeanUtils.getPKPropertyName(entity.getClass());
-            Object idValue = BeanUtils.getValue(entity, pkName);
-            if (idValue == null || idValue.toString().length() == 0) {
-                BeanUtils.setValue(entity, pkName, IdGenerator.createId());
+            className = entity.getClass().getSimpleName();
+            EntityColumn pkColumn = BeanUtils.getPkColumn(entity.getClass());
+            pkName = pkColumn.getProperty();
+            idValue = BeanUtils.getValue(entity, pkName);
+            if (pkColumn.getJavaType() == String.class && (idValue == null || idValue.toString().length() == 0)) {
+                BeanUtils.setValue(entity, pkName, UUID.fastUUID());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("--save {}.{}={} error={}", className, pkName, idValue, e.getMessage(), e);
+            throw new RuntimeException("saveError:" + e.getMessage());
         }
         return getMapper().insert(entity);
     }
@@ -170,7 +178,7 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
     /**
      * 按id列表查询 like ： orderByClause: example.setOrderByClause("create_time desc");
      *
-     * @param ids
+     * @param propName
      * @param entityClass
      * @return
      * @throws Exception

@@ -17,7 +17,7 @@ public interface IBaseService<T> {
     public T selectByKey(Object key);
 
     /**
-     * 如果cid为null则进行插入并赋值cid，如果不为空则更新（包括空栏位更新）
+     * 如果id为null的String字段，则取uuid
      */
     public int save(T entity);
 
