@@ -109,14 +109,11 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
         Example example = new Example(entityClass);
         Example.Criteria criteria = example.createCriteria();
 
-        String shardingKeyField = AnnotationUtils.getShardingKeyField(entityClass);
         String idField = AnnotationUtils.getIdField(entityClass);
         if (paramsMap.get(idField) == null) {
             throw new ShardingKeyException("idField" + ":param " + idField + " is null");
         }
-        if (paramsMap.get(shardingKeyField) == null) {
-            throw new ShardingKeyException(SHARDING_KEY_FIELD + ":param " + shardingKeyField + " is null");
-        }
+        this.checkShardingKey(entityClass, paramsMap);
         Set<Map.Entry<String, Object>> entrySet = paramsMap.entrySet();
         for (Map.Entry<String, Object> entry : entrySet) {
             criteria.andEqualTo(entry.getKey(), entry.getValue());
@@ -124,6 +121,17 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
         return getMapper().updateByExampleSelective(entity, example);
     }
 
+    /**
+     * 检查参数中shardingKey是否有值
+     * @param entityClass
+     * @param paramsMap
+     */
+    public void checkShardingKey(Class entityClass, Map<String, Object> paramsMap){
+        String shardingKeyField = AnnotationUtils.getShardingKeyField(entityClass);
+        if (paramsMap.get(shardingKeyField) == null) {
+            throw new ShardingKeyException(SHARDING_KEY_FIELD + ":param " + shardingKeyField + " is null");
+        }
+    }
 
     /**
      * 软删除
