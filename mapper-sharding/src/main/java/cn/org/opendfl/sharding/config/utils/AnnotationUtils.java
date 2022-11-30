@@ -1,7 +1,9 @@
 package cn.org.opendfl.sharding.config.utils;
 
+import cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm;
 import cn.org.opendfl.sharding.config.annotations.ShardingKey;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * ShardingKey及id注解读取
  * 会以map方式缓存起来，以优化性能
  */
+@Slf4j
 public class AnnotationUtils {
     /**
      * map缓存大小，如果要分表的数据表很多，可以加大这个值
@@ -62,26 +65,28 @@ public class AnnotationUtils {
     public static String getShardingKeyField(Class clazz) {
         String className = clazz.getName();
 
-        ShardingKeyVo shardingKeyField = shardingKeyFieldMap.computeIfAbsent(className, k -> {
+        ShardingKeyVo shardingKeyVo = shardingKeyFieldMap.computeIfAbsent(className, k -> {
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
                 ShardingKey shardingKey = field.getAnnotation(ShardingKey.class);
                 if (shardingKey != null) {
+                    log.debug("getShardingKeyField-className={} field={} shardCount={}", className, field, shardingKey.shardCount());
                     return new ShardingKeyVo(shardingKey, field.getName());
                 }
             }
             return null;
         });
 
-        if (shardingKeyField == null) {
+        if (shardingKeyVo == null) {
             return null;
         }
 
         String tableName = getTableName(clazz);
         tableShardingKeyMap.computeIfAbsent(tableName, k -> {
-            return shardingKeyField;
+            log.debug("getShardingKeyField-tableName={} field={} shardCount={}", tableName, shardingKeyVo.getField(), shardingKeyVo.getShardCount());
+            return shardingKeyVo;
         });
-        return shardingKeyField.getField();
+        return shardingKeyVo.getField();
     }
 
 
@@ -102,12 +107,43 @@ public class AnnotationUtils {
             if (table == null) {
                 return null;
             }
+            log.debug("getTableName-className={} table={}", className, table.name());
             return table.name();
         });
     }
 
     public static ShardingKeyVo getShardingKey(String tableName) {
         return tableShardingKeyMap.get(tableName);
+    }
+
+
+    /**
+     * 获取分片key信息
+     *
+     * @param entityClass
+     * @return
+     */
+    public static ShardingKeyVo getShardingKey(Class entityClass) {
+        String tableName = AnnotationUtils.getTableName(entityClass);
+        ShardingKeyVo shardingKeyVo = AnnotationUtils.getShardingKey(tableName);
+        return shardingKeyVo;
+    }
+
+    public static String getRealTableName(Class entityClass, Long shardingValue) {
+        return getRealTableName(null, entityClass, shardingValue);
+    }
+
+    /**
+     * 获取分表的实际表名
+     *
+     * @param entityClass
+     * @param shardingValue
+     * @return
+     */
+    public static String getRealTableName(String dbName, Class entityClass, Long shardingValue) {
+        String tableName = AnnotationUtils.getTableName(entityClass);
+        ShardingKeyVo shardingKeyVo = AnnotationUtils.getShardingKey(tableName);
+        return TbShardingKeyAlgorithm.getShardingRealTableName(dbName, tableName, shardingValue, shardingKeyVo);
     }
 }
 
