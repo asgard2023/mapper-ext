@@ -10,11 +10,14 @@ public class ShardingKeyVo {
         this.shardCount = shardingKey.shardCount();
         this.tablePrefix = shardingKey.tablePrefix();
         this.name = shardingKey.name();
-
+        this.shardingType=shardingKey.shardingType().getType();
+        this.dateFormat= shardingKey.dateFormat();
     }
 
     private String field;
+    private int shardingType;
     private int shardCount;
+    private String dateFormat;
     private String tablePrefix;
     private String name;
 
@@ -48,5 +51,13 @@ public class ShardingKeyVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getShardingType() {
+        return shardingType;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
     }
 }

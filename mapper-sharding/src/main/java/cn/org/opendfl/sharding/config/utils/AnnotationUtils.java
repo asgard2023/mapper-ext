@@ -1,6 +1,7 @@
 package cn.org.opendfl.sharding.config.utils;
 
 import cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm;
+import cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateAlgorithm;
 import cn.org.opendfl.sharding.config.annotations.ShardingKey;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -65,28 +67,26 @@ public class AnnotationUtils {
     public static String getShardingKeyField(Class clazz) {
         String className = clazz.getName();
 
-        ShardingKeyVo shardingKeyVo = shardingKeyFieldMap.computeIfAbsent(className, k -> {
+        ShardingKeyVo shardingKeyField = shardingKeyFieldMap.computeIfAbsent(className, k -> {
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
                 ShardingKey shardingKey = field.getAnnotation(ShardingKey.class);
                 if (shardingKey != null) {
-                    log.debug("getShardingKeyField-className={} field={} shardCount={}", className, field, shardingKey.shardCount());
                     return new ShardingKeyVo(shardingKey, field.getName());
                 }
             }
             return null;
         });
 
-        if (shardingKeyVo == null) {
+        if (shardingKeyField == null) {
             return null;
         }
 
         String tableName = getTableName(clazz);
         tableShardingKeyMap.computeIfAbsent(tableName, k -> {
-            log.debug("getShardingKeyField-tableName={} field={} shardCount={}", tableName, shardingKeyVo.getField(), shardingKeyVo.getShardCount());
-            return shardingKeyVo;
+            return shardingKeyField;
         });
-        return shardingKeyVo.getField();
+        return shardingKeyField.getField();
     }
 
 
@@ -144,6 +144,12 @@ public class AnnotationUtils {
         String tableName = AnnotationUtils.getTableName(entityClass);
         ShardingKeyVo shardingKeyVo = AnnotationUtils.getShardingKey(tableName);
         return TbShardingKeyAlgorithm.getShardingRealTableName(dbName, tableName, shardingValue, shardingKeyVo);
+    }
+
+    public static String getRealTableName(String dbName, Class entityClass, Date shardingValueDate) {
+        String tableName = AnnotationUtils.getTableName(entityClass);
+        ShardingKeyVo shardingKeyVo = AnnotationUtils.getShardingKey(tableName);
+        return TbShardingKeyDateAlgorithm.getShardingRealTableName(dbName, tableName, shardingValueDate, shardingKeyVo);
     }
 }
 

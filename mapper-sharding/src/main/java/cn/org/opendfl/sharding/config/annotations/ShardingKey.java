@@ -1,5 +1,7 @@
 package cn.org.opendfl.sharding.config.annotations;
 
+import cn.org.opendfl.sharding.config.utils.ShardingType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,6 +17,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ShardingKey {
+    /**
+     * 分片类型
+     * @return
+     */
+    ShardingType shardingType() default ShardingType.ID_MOD;
+
+    /**
+     * shardingType=DATE时，起作用，默认按月
+     * @return
+     */
+    String dateFormat() default "yyMM";
     /**
      * 分片数shardCount=0，走shardingjdbc配置，并默认固定4个分片(建议走另外的分片实现类)
      * 分片表=逻辑表_分片值，exp: t_user对应的分片表t_user_{0..shardCount}
