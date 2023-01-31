@@ -44,16 +44,17 @@ public class AnnotationUtils {
      */
     public static String getIdField(Class clazz) {
         String className = clazz.getName();
-        return idFieldMap.computeIfAbsent(className, k -> {
+        String idField = idFieldMap.computeIfAbsent(className, k -> {
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
-                Id idField = field.getAnnotation(Id.class);
-                if (idField != null) {
+                Id idFieldClass = field.getAnnotation(Id.class);
+                if (idFieldClass != null) {
                     return field.getName();
                 }
             }
-            return null;
+            return "none";
         });
+        return "none".equals(idField)?null:idField;
     }
 
     private static Map<String, ShardingKeyVo> shardingKeyFieldMap = new ConcurrentHashMap<>(INIT_CACHE_SIZE);
@@ -66,6 +67,10 @@ public class AnnotationUtils {
      */
     public static String getShardingKeyField(Class clazz) {
         String className = clazz.getName();
+        String tableName = getTableName(clazz);
+        if(tableName==null){
+            return null;
+        }
 
         ShardingKeyVo shardingKeyField = shardingKeyFieldMap.computeIfAbsent(className, k -> {
             Field[] fields = clazz.getDeclaredFields();
@@ -75,14 +80,12 @@ public class AnnotationUtils {
                     return new ShardingKeyVo(shardingKey, field.getName());
                 }
             }
-            return null;
+            return new ShardingKeyVo();
         });
-
-        if (shardingKeyField == null) {
+        if (shardingKeyField.getField()==null) {
             return null;
         }
 
-        String tableName = getTableName(clazz);
         tableShardingKeyMap.computeIfAbsent(tableName, k -> {
             return shardingKeyField;
         });
