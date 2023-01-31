@@ -15,10 +15,11 @@
         <property name="password" value="jh@123456"/>
     </bean>
 
-    <bean id="preciseModuloTableShardingAlgorithm"
-          class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm"/>
+    <bean id="preciseModuloTableShardingAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm"/>
+    <bean id="preciseModuloTableShardingDateAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateAlgorithm" />
     <sharding:standard-strategy id="tableShardingStrategy" sharding-column="user_id"
                                 precise-algorithm-ref="preciseModuloTableShardingAlgorithm"/>
+    <sharding:standard-strategy id="tableShardingDateStrategy" sharding-column="create_time" precise-algorithm-ref="preciseModuloTableShardingDateAlgorithm" />
 
     <sharding:key-generator id="orderKeyGenerator" type="SNOWFLAKE" column="id"/>
 
@@ -32,6 +33,10 @@
                                      actual-data-nodes="dsSharding.t_user_$->{0..3}"
                                      table-strategy-ref="tableShardingStrategy"
                                      key-generator-ref="orderKeyGenerator"/>
+                <sharding:table-rule logic-table="t_user_login"
+                                     actual-data-nodes="dsSingle.t_user_login"
+                                     table-strategy-ref="tableShardingDateStrategy"
+                                     key-generator-ref="orderKeyGenerator" />
                 <!-- <sharding:table-rule logic-table="t_xxx" 
                 actual-data-nodes="ds$->{0..1}.t_xxx_$->{0..2}" 
                 database-strategy-ref="databaseStrategy"
@@ -40,6 +45,7 @@
             </sharding:table-rules>
             <sharding:binding-table-rules>
                 <sharding:binding-table-rule logic-tables="t_user"/>
+                <sharding:binding-table-rule logic-tables="t_user_login" />
 
             </sharding:binding-table-rules>
             <sharding:broadcast-table-rules>
