@@ -47,6 +47,20 @@
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-namespace</artifactId>
             <version>${shardingsphere.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>shardingsphere-sql-parser-postgresql</artifactId>
+                    <groupId>org.apache.shardingsphere</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>shardingsphere-sql-parser-oracle</artifactId>
+                    <groupId>org.apache.shardingsphere</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>shardingsphere-sql-parser-sqlserver</artifactId>
+                    <groupId>org.apache.shardingsphere</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cn.org.opendfl</groupId>
