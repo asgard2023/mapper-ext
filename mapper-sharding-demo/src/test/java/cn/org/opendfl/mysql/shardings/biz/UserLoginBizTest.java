@@ -140,11 +140,11 @@ public class UserLoginBizTest  {
     public void updateUserLogin() throws Exception{
         Long id = 100L;
         Date begin=DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
-        UserLogin exist = this.userLoginBiz.findById(id);
+        UserLogin exist = null;
         if (exist == null) {
             UserLogin user = new UserLogin();
             user.setId(id);
-            begin=DateUtils.addDays(begin, -1);
+//            begin=DateUtils.addDays(begin, -1);
             user.setCreateTime(begin);
             user.setLoginType("login");
             user.setFuncCode("test");
@@ -175,6 +175,26 @@ public class UserLoginBizTest  {
         list.add(user);
         int v = this.userLoginBiz.saveBatch(list);
         Assertions.assertTrue(v > 0);
+    }
+
+    @Test
+    public void saveBatchInsert() throws Exception{
+        Long id = 100L;
+        Date begin=DateUtils.parseDate("2022-06-30 01:00:00", FORMAT_DATETIME);
+        for(int i=0; i<100; i++){
+            UserLogin user = new UserLogin();
+            user.setId(id+i);
+            user.setUserId(user.getId()%10);
+            begin=DateUtils.addDays(begin, 1);
+            user.setCreateTime(begin);
+            user.setLoginType("login");
+            user.setFuncCode("test");
+            try {
+                this.userLoginBiz.saveUserLogin(user);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     @Test

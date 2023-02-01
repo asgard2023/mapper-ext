@@ -9,3 +9,10 @@ N
 mapper-sharding-demo/readme.md,e\2\e29b1707fb262b8130aac0441ea092f68addf87d
 9
 	readme.md,2\7\275d783e298228506068436512433d343feb52aa
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+Å
+Qmapper-sharding-demo/src/main/java/cn/org/opendfl/shardings/biz/UserLoginBiz.java,0\f\0f2e112c01766879c3d71d9f1fba69b58a3ff0fc
+á
+Wmapper-sharding-demo/src/main/java/cn/org/opendfl/shardings/mapper/UserLoginMapper.java,a\7\a71290a6348cf8c34fdf248ee4a6a8c229e94f80
