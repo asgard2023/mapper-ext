@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class UserLoginController {
     @Autowired
     private IUserLoginBiz userLoginBiz;
 
+    private Class<UserLogin> entityClass = UserLogin.class;
+
     /**
      * t_user列表查询
      *
@@ -52,7 +55,7 @@ public class UserLoginController {
         if (entity == null) {
             entity = new UserLogin();
         }
-        pageInfo = userLoginBiz.findPageBy(entity, pageInfo, this.createAllParams(request));
+        pageInfo = userLoginBiz.findPageBy(entity, entityClass, pageInfo,  this.createAllParams(request));
         return pageInfo;
     }
 
@@ -89,7 +92,7 @@ public class UserLoginController {
     @RequestMapping(value = "update", method = {RequestMethod.POST, RequestMethod.GET})
     public ResultData update(UserLogin entity, HttpServletRequest request) {
 //		entity.setUpdateUserLogin(getCurrentUserLoginId());
-        int v = userLoginBiz.updateUserLogin(entity);
+        int v = userLoginBiz.updateUserLogin(entity, entity.getCreateTime());
         return ResultData.success(v);
     }
 
@@ -103,10 +106,10 @@ public class UserLoginController {
      * @date 2022-10-27 17:12:22
      */
     @RequestMapping(value = "delete", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResultData delete(@RequestParam(name = "id", required = false) Long id, HttpServletRequest request) {
+    public ResultData delete(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "createTime", required = false) Date createTime, HttpServletRequest request) {
         ValidateUtils.notNull(id, "id不能为空");
         String remark = request.getParameter("remark");
-        int v = userLoginBiz.deleteUserLogin(id, this.getCurrentUserLoginId(), remark);
+        int v = userLoginBiz.deleteUserLogin(id, createTime, this.getCurrentUserLoginId(), remark);
         return ResultData.success(v);
     }
 

@@ -40,7 +40,7 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>opendfl-base</artifactId>
-            <version>1.1</version>
+            <version>1.3</version>
         </dependency>
         <!-- 分库分表与mp插件 -->
         <dependency>
@@ -65,12 +65,12 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-ext</artifactId>
-            <version>4.1</version>
+            <version>4.2</version>
         </dependency>
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-sharding</artifactId>
-            <version>4.4</version>
+            <version>4.5</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

@@ -1,8 +1,10 @@
 package cn.org.opendfl.sharding.config.algorithm;
 
+
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
-import cn.org.opendfl.sharding.config.utils.CommUtils;
+import cn.org.opendfl.sharding.config.utils.ShardingTableUtils;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
 
@@ -46,15 +48,13 @@ public class TbShardingKeyAlgorithm implements PreciseShardingAlgorithm<Long> {
 
     public static String getShardingRealTableName(String dbName, String logicTableName, ShardingKeyVo shardingKeyVo, Integer tbIdx) {
         //tablePrefix为空则取逻辑表+‘_'，例如：t_user_
-        String tablePrefix = shardingKeyVo.getTablePrefix();
-        if (CommUtils.isBlank(tablePrefix)) {
-            tablePrefix = logicTableName + "_";
-        }
+        String tablePrefix = ShardingTableUtils.getTablePrefix(shardingKeyVo.getTablePrefix(), logicTableName);
         String tbDbName = "";
-        if (CommUtils.isNotBlank(dbName)) {
+        if (CharSequenceUtil.isNotBlank(dbName)) {
             tbDbName = dbName + ".";
         }
         return tbDbName + tablePrefix + tbIdx;
     }
 
-}
+}  
+

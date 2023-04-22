@@ -15,10 +15,11 @@
         <property name="password" value="jh@123456"/>
     </bean>
 
-    <bean id="preciseModuloTableShardingAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm"/>
-    <bean id="preciseModuloTableShardingDateAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateAlgorithm" />
-    <sharding:standard-strategy id="tableShardingStrategy" sharding-column="user_id" precise-algorithm-ref="preciseModuloTableShardingAlgorithm"/>
-    <sharding:standard-strategy id="tableShardingDateStrategy" sharding-column="create_time" precise-algorithm-ref="preciseModuloTableShardingDateAlgorithm" />
+    <bean id="tableShardingAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm"/>
+    <bean id="tableShardingDateAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateAlgorithm" />
+    <bean id="tableShardingRangeAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyRangeAlgorithm" />
+    <sharding:standard-strategy id="tableShardingStrategy" sharding-column="user_id" precise-algorithm-ref="tableShardingAlgorithm"/>
+    <sharding:standard-strategy id="tableShardingDateStrategy" sharding-column="create_time" precise-algorithm-ref="tableShardingDateAlgorithm"  range-algorithm-ref="tableShardingRangeAlgorithm"/>
 
     <sharding:key-generator id="orderKeyGenerator" type="SNOWFLAKE" column="id"/>
 

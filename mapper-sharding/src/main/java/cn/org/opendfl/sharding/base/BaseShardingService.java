@@ -7,6 +7,8 @@ import cn.org.opendfl.base.BeanUtils;
 import cn.org.opendfl.base.IBaseService;
 import cn.org.opendfl.base.MyPageInfo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
+import cn.org.opendfl.sharding.exceptions.ShardingKeyException;
+import cn.org.opendfl.sharding.exceptions.ShardingNotSupportException;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Propagation;
@@ -105,7 +107,7 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
      * @param entityClass
      * @return
      */
-    public int updateByPrimaryKeySelectiveExample(T entity, Map<String, Object> paramsMap, Class<?> entityClass) {
+    public int updateByPrimaryKeySelectiveExample(T entity, Map<String, Object> paramsMap, Class<T> entityClass) {
         Example example = new Example(entityClass);
         Example.Criteria criteria = example.createCriteria();
 
@@ -167,7 +169,7 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
      * @throws Exception
      */
     @Override
-    public List<T> findByIds(List<Object> ids, Class<?> entityClass) {
+    public List<T> findByIds(List<Object> ids, Class<T> entityClass) {
         Example example = new Example(entityClass);
         Example.Criteria criteria = example.createCriteria();
         Set<EntityColumn> columnList = EntityHelper.getPKColumns(entityClass);
@@ -179,7 +181,7 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
     }
 
     @Override
-    public List<T> findByPropotys(String propName, List<Object> propotys, Class<?> entityClass) throws Exception {
+    public List<T> findByPropotys(String propName, List<Object> propotys, Class<T> entityClass) throws Exception {
         return findByPropotys(propName, propotys, entityClass, null);
     }
 
@@ -192,7 +194,7 @@ public abstract class BaseShardingService<T> implements IBaseService<T> {
      * @throws Exception
      */
     @Override
-    public List<T> findByPropotys(String propName, List<Object> propotys, Class<?> entityClass, String orderByClause) throws Exception {
+    public List<T> findByPropotys(String propName, List<Object> propotys, Class<T> entityClass, String orderByClause) throws Exception {
         if (propotys == null || propotys.isEmpty()) {
             return new ArrayList<>();
         }

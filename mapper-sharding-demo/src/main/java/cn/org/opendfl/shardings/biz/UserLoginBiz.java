@@ -1,17 +1,19 @@
 package cn.org.opendfl.shardings.biz;
 
-import cn.org.opendfl.sharding.base.BaseShardingService;
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
+import cn.org.opendfl.sharding.base.BaseShardingShardingDateService;
 import cn.org.opendfl.shardings.mapper.UserLoginMapper;
 import cn.org.opendfl.shardings.po.UserLogin;
-import com.google.common.collect.ImmutableMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.MapperMy;
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.util.StringUtil;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +23,11 @@ import java.util.Map;
  * @author chenjh
  */
 @Service
-public class UserLoginBiz extends BaseShardingService<UserLogin> implements IUserLoginBiz {
+public class UserLoginBiz extends BaseShardingShardingDateService<UserLogin> implements IUserLoginBiz {
 
     @Resource
     private UserLoginMapper mapper;
+    private Snowflake snowflake = IdUtil.createSnowflake(0, 0);
 
     @Override
     public MapperMy getMapper() {
@@ -41,19 +44,7 @@ public class UserLoginBiz extends BaseShardingService<UserLogin> implements IUse
     }
 
     private void searchCondition(UserLogin entity, Map<String, Object> otherParams, Example.Criteria criteria) {
-        String startTime = (String) otherParams.get("startTime");
-        if (StringUtil.isNotEmpty(startTime)) {
-            criteria.andGreaterThanOrEqualTo("createTime", startTime);
-        }
-        String endTime = (String) otherParams.get("endTime");
-        if (StringUtil.isNotEmpty(endTime)) {
-            criteria.andLessThanOrEqualTo("createTime", endTime);
-        }
-
-        if (entity.getCreateTime() != null) {
-            otherParams.put("createTime", entity.getCreateTime());
-        }
-
+        this.shardingDateCondition(criteria, otherParams, UserLogin.class);
         if (entity.getUserId() != null) {
             otherParams.put("userId", entity.getUserId());
         }
@@ -70,6 +61,11 @@ public class UserLoginBiz extends BaseShardingService<UserLogin> implements IUse
         if (list == null || list.isEmpty()) {
             return -1;
         }
+        list.stream().forEach(t -> {
+            if (t.getId() == null) {
+                t.setId(snowflake.nextId());
+            }
+        });
         return this.mapper.insertListById(list);
     }
 
@@ -82,28 +78,45 @@ public class UserLoginBiz extends BaseShardingService<UserLogin> implements IUse
 //    @Transactional(transactionManager = "transactionManagerSharding")
 //    @Transactional
     public int saveUserLogin(UserLogin entity) {
-        int v = this.mapper.insert(entity);
-        return v;
+        if(entity.getCreateTime()==null){
+            entity.setCreateTime(new Date());
+        }
+        if(entity.getIfDel()==null){
+            entity.setIfDel(0);
+        }
+        return this.mapper.insert(entity);
     }
 
-    public int updateUserLogin(UserLogin entity) {
+    public int updateUserLogin(UserLogin entity, Date searchDate) {
+        entity.setUpdateTime(new Date());
         //用于指定shardingKey对应的属性名及属性值
-        Map<String, Object> paramsMap = ImmutableMap.of("createTime", entity.getCreateTime(), "id", entity.getId());
-        entity.setCreateTime(null);
-        int v = this.updateByPrimaryKeySelectiveExample(entity, paramsMap, UserLogin.class);
-
-        return v;
+        return this.updateData(entity, searchDate, UserLogin.class);
     }
 
-    public int deleteUserLogin(Long id, String operUserLogin, String remark) {
-        UserLogin exist = this.findById(id);
-
+    public int deleteUserLogin(Long id, Date searchDate, String operUserLogin, String remark) {
         UserLogin po = new UserLogin();
         po.setId(id);
-        po.setCreateTime(exist.getCreateTime());//需要补充shardingkey
+        po.setUpdateTime(new Date());
         po.setResult(remark);
-//        po.setIfDel(1); // 0未删除,1已删除
-        int v = this.updateUserLogin(po);
-        return v;
+        po.setIfDel(1); // 0未删除,1已删除
+        return this.updateUserLogin(po, searchDate);
+    }
+
+    public List<UserLogin> selectByTime(Date start, Date end) {
+        return this.mapper.selectByTime(start, end);
+    }
+
+    public List<UserLogin> findByIds(List<Long> ids, Date createTime) {
+        List<Object> objIds = Arrays.asList(ids.toArray());
+        return super.findByIds(objIds, createTime, UserLogin.class, null);
+    }
+
+
+    public List<UserLogin> selectByExample(Date start, Date end) {
+        Example example = new Example(UserLogin.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andGreaterThanOrEqualTo("createTime", start);
+        criteria.andLessThan("createTime", end);
+        return this.mapper.selectByExample(example);
     }
 }

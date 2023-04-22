@@ -1,11 +1,12 @@
 package cn.org.opendfl.sharding.config.algorithm;
 
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
-import cn.org.opendfl.sharding.config.utils.CommUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import cn.org.opendfl.sharding.config.utils.ShardingTableUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
 
@@ -19,6 +20,7 @@ import java.util.Date;
  *
  * @author chenjh
  */
+@Slf4j
 public class TbShardingKeyDateAlgorithm implements PreciseShardingAlgorithm<Date> {
     /**
      * 精确分片算法（按月分表）
@@ -31,27 +33,18 @@ public class TbShardingKeyDateAlgorithm implements PreciseShardingAlgorithm<Date
     public String doSharding(Collection<String> tableNames, PreciseShardingValue<Date> preciseShardingValue) {
         ShardingKeyVo shardingKeyDateVo = AnnotationUtils.getShardingKey(preciseShardingValue.getLogicTableName());
         Date shardingValueDate = preciseShardingValue.getValue();
-        String tablePrefix = shardingKeyDateVo.getTablePrefix();
-        if (StringUtils.isBlank(tablePrefix)) {
-            tablePrefix = preciseShardingValue.getLogicTableName() + "_";
-        }
-        String timeValue= DateFormatUtils.format(shardingValueDate, shardingKeyDateVo.getDateFormat());
-        return tablePrefix + timeValue;
+        return getShardingRealTableName(null, preciseShardingValue.getLogicTableName(), shardingValueDate, shardingKeyDateVo);
     }
 
     public static String getShardingRealTableName(String dbName, String logicTableName, Date shardingValueDate, ShardingKeyVo shardingKeyVo) {
-        String timeValue= DateFormatUtils.format(shardingValueDate, shardingKeyVo.getDateFormat());
+        String timeValue = DateUtil.format(shardingValueDate, shardingKeyVo.getDateFormat());
         return getShardingRealTableName(dbName, logicTableName, shardingKeyVo, timeValue);
     }
 
     public static String getShardingRealTableName(String dbName, String logicTableName, ShardingKeyVo shardingKeyVo, String timeValue) {
-        //tablePrefix为空则取逻辑表+‘_'，例如：t_user_
-        String tablePrefix = shardingKeyVo.getTablePrefix();
-        if (CommUtils.isBlank(tablePrefix)) {
-            tablePrefix = logicTableName + "_";
-        }
+        String tablePrefix = ShardingTableUtils.getTablePrefix(shardingKeyVo.getTablePrefix(), logicTableName);
         String tbDbName = "";
-        if (CommUtils.isNotBlank(dbName)) {
+        if (CharSequenceUtil.isNotBlank(dbName)) {
             tbDbName = dbName + ".";
         }
         return tbDbName + tablePrefix + timeValue;

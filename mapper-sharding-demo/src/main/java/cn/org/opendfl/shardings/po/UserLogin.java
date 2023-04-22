@@ -26,8 +26,10 @@ public class UserLogin {
     private String ip;
     private String deviceId;
     private String sysVersion;
-    @ShardingKey(shardingType = ShardingType.DATE, tablePrefix = "t_user_login_", dateFormat = "yyMM")
+    @ShardingKey(shardingType = ShardingType.MONTH, tablePrefix = "t_user_login_", dateFormat = "yyMM")
     private Date createTime;
     private String result;
     private String qd;
+    private Integer ifDel;
+    private Date updateTime;
 }

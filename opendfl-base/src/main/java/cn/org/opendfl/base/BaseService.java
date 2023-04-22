@@ -120,7 +120,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      * @param entityClass
      * @return
      */
-    public int updateByPrimaryKeySelectiveExample(T entity, Map<String, Object> paramsMap, Class<?> entityClass) {
+    public int updateByPrimaryKeySelectiveExample(T entity, Map<String, Object> paramsMap, Class<T> entityClass) {
         Example example = new Example(entityClass);
         Example.Criteria criteria = example.createCriteria();
         Set<Map.Entry<String, Object>> entrySet = paramsMap.entrySet();
@@ -163,7 +163,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      * @throws Exception
      */
     @Override
-    public List<T> findByIds(List<Object> ids, Class<?> entityClass) {
+    public List<T> findByIds(List<Object> ids, Class<T> entityClass) {
         Example example = new Example(entityClass);
         Example.Criteria criteria = example.createCriteria();
         Set<EntityColumn> columnList = EntityHelper.getPKColumns(entityClass);
@@ -175,7 +175,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public List<T> findByPropotys(String propName, List<Object> propotys, Class<?> entityClass) throws Exception {
+    public List<T> findByPropotys(String propName, List<Object> propotys, Class<T> entityClass) throws Exception {
         return findByPropotys(propName, propotys, entityClass, null);
     }
 
@@ -188,7 +188,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      * @throws Exception
      */
     @Override
-    public List<T> findByPropotys(String propName, List<Object> propotys, Class<?> entityClass, String orderByClause) throws Exception {
+    public List<T> findByPropotys(String propName, List<Object> propotys, Class<T> entityClass, String orderByClause) throws Exception {
         if (CollUtil.isEmpty(propotys)) {
             return Collections.emptyList();
         }

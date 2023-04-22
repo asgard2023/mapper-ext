@@ -1,5 +1,6 @@
 package cn.org.opendfl.mysql.shardings.biz;
 
+import cn.hutool.core.date.DatePattern;
 import cn.org.opendfl.MysqlApplication;
 import cn.org.opendfl.base.MyPageInfo;
 import cn.org.opendfl.base.PageUtils;
@@ -23,31 +24,51 @@ import java.util.*;
 @SpringBootTest(classes = MysqlApplication.class)
 @ActiveProfiles(value = "test")
 @Slf4j
-public class UserLoginBizTest  {
+class UserLoginBizTest {
     @Resource
     private UserLoginBiz userLoginBiz;
 
-    public static String[] FORMAT_DATETIME=new String[]{"yyyy-MM-dd HH:mm:ss"};
+    static String[] FORMAT_DATETIME = new String[]{"yyyy-MM-dd HH:mm:ss"};
 
     @Test
-    public void findById() {
-        UserLogin user = userLoginBiz.findById(1L);
+    void findById() throws Exception {
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
+        UserLogin user = userLoginBiz.findById(98L, createTime, UserLogin.class);
         System.out.println((user));
-        Assertions.assertTrue(user != null);
+        Assertions.assertNotNull(user, "user is null");
     }
 
     @Test
-    public void findBy() throws Exception {
+    void findBy() throws Exception {
         UserLogin search = new UserLogin();
         search.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
         PageHelper.startPage(1, 5);
-        List<UserLogin> list = userLoginBiz.findBy(search);
+        List<UserLogin> list = userLoginBiz.findBy(search, UserLogin.class);
         System.out.println((list));
         Assertions.assertTrue(list.size() > 0);
     }
 
     @Test
-    public void shardingKey() throws Exception {
+    void selectByTime() throws Exception{
+        Date startTime=DateUtils.parseDate("2022-11-30 01:00:00", FORMAT_DATETIME);
+        Date endTime=DateUtils.parseDate("2023-02-30 01:00:00", FORMAT_DATETIME);
+        List<UserLogin> list = this.userLoginBiz.selectByTime(startTime, endTime);
+        System.out.println(list);
+        Assertions.assertTrue(list.size() > 0);
+    }
+
+    @Test
+    void selectByExample() throws Exception{
+        Date startTime=DateUtils.parseDate("2022-11-30 01:00:00", FORMAT_DATETIME);
+        Date endTime=DateUtils.parseDate("2023-02-30 01:00:00", FORMAT_DATETIME);
+        List<UserLogin> list = this.userLoginBiz.selectByExample(startTime, endTime);
+        System.out.println(list);
+        Assertions.assertTrue(list.size() > 0);
+    }
+
+
+    @Test
+    void shardingKey() throws Exception {
         System.out.println("----shardingKey-");
         UserLogin user = new UserLogin();
         user.setId(1L);
@@ -66,10 +87,11 @@ public class UserLoginBizTest  {
 
         String tableName = AnnotationUtils.getTableName(UserLogin.class);
         System.out.println(tableName);
+        Assertions.assertNotNull(tableName);
     }
 
     @Test
-    public void findPageBy() {
+    void findPageBy() throws Exception {
         Map<String, Object> paramsMap = new HashMap<>();
         UserLogin entity = new UserLogin();
         MyPageInfo<UserLogin> list = null;
@@ -85,7 +107,9 @@ public class UserLoginBizTest  {
 
 //        paramsMap.put("userId", 5L);
         entity = new UserLogin();
-        list = this.userLoginBiz.findPageBy(entity, pageInfo, paramsMap);
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
+        entity.setCreateTime(createTime);
+        list = this.userLoginBiz.findPageBy(entity, UserLogin.class, pageInfo, paramsMap);
         System.out.println((list.getList().size()));
         Assertions.assertTrue(list.getList().size() > 0);
 
@@ -93,7 +117,7 @@ public class UserLoginBizTest  {
 
 
     @Test
-    public void findPageBy_shardingkey() throws Exception {
+    void findPageBy_shardingkey() throws Exception {
         Map<String, Object> paramsMap = new HashMap<>();
         MyPageInfo<UserLogin> list = null;
         paramsMap.put("pageNum", 1);
@@ -102,14 +126,13 @@ public class UserLoginBizTest  {
 
         UserLogin entity = new UserLogin();
         entity.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
-        paramsMap.remove("createTime");
-        list = this.userLoginBiz.findPageBy(entity, pageInfo, paramsMap);
+        list = this.userLoginBiz.findPageBy(entity, UserLogin.class, pageInfo, paramsMap);
         System.out.println(list.getList().size() + " " + (list));
         Assertions.assertTrue(list.getList().size() > 0);
     }
 
     @Test
-    public void findPageBy_shardingkey2() throws Exception {
+    void findPageBy_shardingkey2() throws Exception {
         Map<String, Object> paramsMap = new HashMap<>();
         MyPageInfo<UserLogin> list = null;
         paramsMap.put("pageNum", 1);
@@ -118,33 +141,33 @@ public class UserLoginBizTest  {
 
         UserLogin entity = new UserLogin();
 //        paramsMap.put("userId", 5L);
-        Date createTime=DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
         paramsMap.put("createTime", createTime);
-        list = this.userLoginBiz.findPageBy(entity, pageInfo, paramsMap);
+        list = this.userLoginBiz.findPageBy(entity, UserLogin.class, pageInfo, paramsMap);
         System.out.println((list));
         Assertions.assertTrue(list.getList().size() > 0);
     }
 
     @Test
-    public void saveUserLogin() throws Exception{
+    void saveUserLogin() throws Exception {
         UserLogin user = new UserLogin();
         user.setId(98L);
-//        userBiz.delete(user.getId());
         user.setCreateTime(DateUtils.parseDate("2022-12-30 01:01:00", FORMAT_DATETIME));
+        userLoginBiz.delete(user.getId(), user.getCreateTime(), UserLogin.class);
         user.setLoginType("1");
         user.setFuncCode("test");
-        userLoginBiz.saveUserLogin(user);
+        int v = userLoginBiz.saveUserLogin(user);
+        Assertions.assertEquals(1, v, "saveUserLogin");
     }
 
     @Test
-    public void updateUserLogin() throws Exception{
+    void updateUserLogin() throws Exception {
         Long id = 100L;
-        Date begin=DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
-        UserLogin exist = null;
+        Date begin = DateUtils.parseDate("2022-12-30 01:00:00", DatePattern.NORM_DATETIME_PATTERN);
+        UserLogin exist = this.userLoginBiz.findById(id, begin, UserLogin.class);
         if (exist == null) {
             UserLogin user = new UserLogin();
             user.setId(id);
-//            begin=DateUtils.addDays(begin, -1);
             user.setCreateTime(begin);
             user.setLoginType("login");
             user.setFuncCode("test");
@@ -153,23 +176,23 @@ public class UserLoginBizTest  {
 
         UserLogin user = new UserLogin();
         user.setId(id);
-//        userBiz.delete(user.getId());
-        user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
+        user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", DatePattern.NORM_DATETIME_PATTERN));
         user.setLoginType("login");
         user.setFuncCode("test");
-        userLoginBiz.updateUserLogin(user);
+        int v = userLoginBiz.updateUserLogin(user, user.getCreateTime());
+        Assertions.assertEquals(1, v, "updateUserLogin");
     }
 
     @Test
-    public void saveBatch() throws Exception{
+    void saveBatch() throws Exception {
         List<UserLogin> list = new ArrayList<>();
         UserLogin user = new UserLogin();
-        user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
+        user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", DatePattern.NORM_DATETIME_PATTERN));
         user.setLoginType("batch");
         user.setFuncCode("test");
         list.add(user);
         user = new UserLogin();
-        user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
+        user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", DatePattern.NORM_DATETIME_PATTERN));
         user.setLoginType("batch");
         user.setFuncCode("test");
         list.add(user);
@@ -178,40 +201,44 @@ public class UserLoginBizTest  {
     }
 
     @Test
-    public void saveBatchInsert() throws Exception{
+    void saveBatchInsert() throws Exception {
         Long id = 100L;
-        Date begin=DateUtils.parseDate("2022-06-30 01:00:00", FORMAT_DATETIME);
-        for(int i=0; i<100; i++){
+        Date begin = new Date();
+        int v=0;
+        for (int i = 0; i < 20; i++) {
             UserLogin user = new UserLogin();
-            user.setId(id+i);
-            user.setUserId(user.getId()%10);
-            begin=DateUtils.addDays(begin, 1);
+            user.setId(id + i);
+            user.setUserId(user.getId() % 10);
+            begin = DateUtils.addDays(begin, 1);
             user.setCreateTime(begin);
             user.setLoginType("login");
             user.setFuncCode("test");
             try {
-                this.userLoginBiz.saveUserLogin(user);
+                v+=this.userLoginBiz.saveUserLogin(user);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
+        Assertions.assertEquals(20, v);
+
     }
 
     @Test
-    public void saveBatch_withId() throws Exception {
+    void saveBatch_withId() throws Exception {
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
         List<UserLogin> list = new ArrayList<>();
         UserLogin user = new UserLogin();
-//        user.setId(300L);
-        userLoginBiz.delete(user.getId());
+        user.setId(300L);
+        userLoginBiz.delete(user.getId(), createTime, UserLogin.class);
         user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
         user.setLoginType("withId");
         user.setFuncCode("test");
         list.add(user);
 
         user = new UserLogin();
-//        user.setId(301L);
-        userLoginBiz.delete(user.getId());
+        user.setId(301L);
         user.setCreateTime(DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME));
+        userLoginBiz.delete(user.getId(), createTime, UserLogin.class);
         user.setLoginType("withId");
         user.setFuncCode("test");
         list.add(user);
@@ -220,31 +247,36 @@ public class UserLoginBizTest  {
     }
 
     @Test
-    public void findByIds() {
-        List ids = Arrays.asList(new Long[]{1L, 2L, 3L, 4L});
-        List<UserLogin> list = this.userLoginBiz.findByIds(ids, UserLogin.class);
+    void findByIds() throws Exception {
+        List ids = Arrays.asList(new Long[]{1L, 2L, 3L, 4L,98L,100L});
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
+        List<UserLogin> list = this.userLoginBiz.findByIds(ids, createTime);
         System.out.println((list));
         Assertions.assertTrue(list.size() > 0);
     }
 
     @Test
-    public void findMapByIds() {
-        List ids = Arrays.asList(new Long[]{1L, 2L, 3L, 4L});
-        Map<String, UserLogin> map = this.userLoginBiz.findMapByIds(ids, UserLogin.class);
-        System.out.println((map));
-        Assertions.assertTrue(map.size() > 0);
+    void findMapByIds() throws Exception {
+        List ids = Arrays.asList(new Long[]{1L, 2L, 3L, 4L, 98L,100L});
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
+        List<UserLogin> list = this.userLoginBiz.findByIds(ids, createTime, UserLogin.class);
+        System.out.println((list));
+        Assertions.assertTrue(list.size() > 0);
     }
 
-    @Test
-    public void findOne() {
-        UserLogin user = this.userLoginBiz.findOne("id", 1, UserLogin.class);
-        System.out.println((user));
-        Assertions.assertTrue(user != null);
-    }
+
+
+//    @Test
+//    void findOne() {
+//        UserLogin user = this.userLoginBiz.findOne("id", 1, UserLogin.class);
+//        System.out.println((user));
+//        Assertions.assertTrue(user != null);
+//    }
 
     @Test
-    public void deleteUserLogin() {
-        int v = this.userLoginBiz.deleteUserLogin(1L, "test", "test");
+    void deleteUserLogin() throws Exception {
+        Date createTime = DateUtils.parseDate("2022-12-30 01:00:00", FORMAT_DATETIME);
+        int v = this.userLoginBiz.deleteUserLogin(1L, createTime, "test", "test");
         System.out.println((v));
     }
 }
