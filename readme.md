@@ -17,6 +17,8 @@ http://localhost:8080/index.html
 * 支持selectCountExistByExample select exists(select 1 from table_name where condition limit 1)
 * 支持selectCountAndMinMaxTimeByExample select count(*) count,min(create_time),max(create_time) from table_name where 
 * 支持sharding-jdbc注解，见mapper-sharding模块
+  * 支持按id取模分表
+  * 支持按时间分表(按日/月或年)，表名格式支持日期格化yyyy-MM-dd HH配置
 
 ## 使用
 * 配置见：MybatisConfiguration.java,MybatisLoadInit.java
