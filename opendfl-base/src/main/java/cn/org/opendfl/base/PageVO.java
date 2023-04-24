@@ -23,6 +23,7 @@ public class PageVO<T> implements IPageVO<T>, java.io.Serializable {
     private int totalPage;
     private int currentPage;
     private Collection<T> datas;
+    private Map<String, Object> dicts;
     private String sort;
     private String order;
     protected static final List<String> commParamList = Arrays.asList("sort", "order", "page", "rows", "startDate", "endDate");
@@ -136,6 +137,9 @@ public class PageVO<T> implements IPageVO<T>, java.io.Serializable {
         Long total = pageInfo.getTotal();
         this.totalSize = total.intValue();
         this.currentPage = pageInfo.getPageNum();
+        if(pageInfo instanceof MyPageInfo) {
+            this.dicts = ((MyPageInfo)pageInfo).getDicts();
+        }
     }
 
     public int getTotal() {
@@ -265,4 +269,10 @@ public class PageVO<T> implements IPageVO<T>, java.io.Serializable {
         this.order = order;
     }
 
+    public void setDicts(Map<String, Object> dicts) {
+        this.dicts = dicts;
+    }
+    public Map<String, Object> getDicts(){
+        return this.dicts;
+    }
 }

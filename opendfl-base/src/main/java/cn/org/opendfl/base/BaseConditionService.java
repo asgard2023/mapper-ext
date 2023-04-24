@@ -1,9 +1,9 @@
 package cn.org.opendfl.base;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
@@ -38,16 +38,16 @@ public interface BaseConditionService<T> {
     public default void addFilters(Example.Criteria criteria, Map<String, Object> otherParams) {
         String filters = (String) otherParams.get("filters");
         if (!CharSequenceUtil.isEmpty(filters)) {
-            JSONObject jsonFilter = (JSONObject) JSON.toJSON(filters);
-            String groupOp = jsonFilter.getString("groupOp");
+            JSONObject jsonFilter = JSONUtil.parseObj(filters);
+            String groupOp = jsonFilter.getStr("groupOp");
             JSONArray rules = jsonFilter.getJSONArray("rules");
             int rulesCount = rules.size();
             if ("AND".equals(groupOp)) {
                 for (int i = 0; i < rulesCount; i++) {
                     JSONObject rule = rules.getJSONObject(i);
-                    String field = rule.getString("field");
+                    String field = rule.getStr("field");
                     Object data = rule.get("data");
-                    String op = rule.getString("op");
+                    String op = rule.getStr("op");
                     if ("eq".equals(op)) {//等于
                         criteria.andEqualTo(field, data);
                     } else if ("ne".equals(op)) {//不等于
