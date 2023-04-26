@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class PageResult<T> implements Serializable {
@@ -16,6 +17,9 @@ public class PageResult<T> implements Serializable {
         this.data = pageInfo.getList();
         Long total = pageInfo.getTotal();
         this.total = total.intValue();
+        if(pageInfo instanceof MyPageInfo) {
+            this.dicts = ((MyPageInfo)pageInfo).getDicts();
+        }
     }
 
     private static final long serialVersionUID = 1L;
@@ -23,4 +27,5 @@ public class PageResult<T> implements Serializable {
     private String msg;
     private Integer total;
     private List<T> data;
+    private Map<String, Object> dicts;
 }
