@@ -1,7 +1,7 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.1.254:3306/mapper-extend?allowPublicKeyRetrieval=true&allowMultiQueries=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.0.40:3306/mapper-extend?allowPublicKeyRetrieval=true&allowMultiQueries=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: mapper
     password: jh@123456
     driver-class-name: com.mysql.cj.jdbc.Driver

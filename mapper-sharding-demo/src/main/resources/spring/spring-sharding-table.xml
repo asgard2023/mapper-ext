@@ -10,8 +10,8 @@
 
     <bean id="dsSharding" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url"  value="jdbc:mysql://192.168.1.254:3306/ds_single?allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowMultiQueries=true"/>
-        <property name="username" value="single"/>
+        <property name="url"  value="jdbc:mysql://192.168.0.40:3306/ds_single?allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowMultiQueries=true"/>
+        <property name="username" value="sharding"/>
         <property name="password" value="jh@123456"/>
     </bean>
 
