@@ -19,6 +19,7 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
 
     private static CommonMapper commonMapper;
 
+    private static String schemaName;
     private static final Set<String> tableNameCache = new HashSet<>();
 
     /**
@@ -26,6 +27,9 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
      */
     public static void setCommonMapper(CommonMapper commonMapper) {
         ShardingAlgorithmTool.commonMapper = commonMapper;
+    }
+    public static void setSchemaName(String schemaName){
+        ShardingAlgorithmTool.schemaName=schemaName;
     }
 
     /**
@@ -42,12 +46,19 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
         }
 
         synchronized (logicTableName.intern()) {
-            // 缓存中无此表 建表 并添加缓存
-            CreateTableSql createTableSql = commonMapper.selectTableCreateSql(logicTableName);
-            String sql = createTableSql.getCreateTable();
-            sql = sql.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS");
-            sql = sql.replace(logicTableName, resultTableName);
-            commonMapper.executeSql(sql);
+            int exists = commonMapper.existTable(schemaName, logicTableName);
+            //检查如果表已存在
+            if(exists==1){
+                tableNameCache.add(resultTableName);
+            }
+            else {
+                // 缓存中无此表 建表 并添加缓存
+                CreateTableSql createTableSql = commonMapper.selectTableCreateSql(logicTableName);
+                String sql = createTableSql.getCreateTable();
+                sql = sql.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS");
+                sql = sql.replace(logicTableName, resultTableName);
+                commonMapper.executeSql(sql);
+            }
             tableNameCache.add(resultTableName);
         }
 

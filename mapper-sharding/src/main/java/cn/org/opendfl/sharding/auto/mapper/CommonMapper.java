@@ -3,6 +3,7 @@ package cn.org.opendfl.sharding.auto.mapper;
 
 import cn.org.opendfl.sharding.auto.po.CreateTableSql;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.MapperMy;
 
 import java.util.List;
@@ -34,5 +35,8 @@ public interface CommonMapper extends MapperMy<CreateTableSql> {
      * @param sql 待执行SQL
      */
     void executeSql(@Param("sql") String sql);
+
+    @Select("select exists(SELECT * FROM information_schema.TABLES WHERE (#{schema} is null or table_schema=#{schema}) AND table_name=#{tableName})")
+    int existTable(@Param("schema") String schema, @Param("tableName") String tableName);
 
 }

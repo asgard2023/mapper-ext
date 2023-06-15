@@ -2,7 +2,7 @@ package cn.org.opendfl.mysql.shardings.biz;
 
 import cn.org.opendfl.base.MyPageInfo;
 import cn.org.opendfl.base.PageUtils;
-import cn.org.opendfl.MysqlApplication;
+import cn.org.opendfl.MysqlDemoApplication;
 import cn.org.opendfl.sharding.config.annotations.ShardingKey;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
 import cn.org.opendfl.shardings.biz.UserBiz;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest(classes = MysqlApplication.class)
+@SpringBootTest(classes = MysqlDemoApplication.class)
 @ActiveProfiles(value = "test")
 @Slf4j
 public class UserBizTest {

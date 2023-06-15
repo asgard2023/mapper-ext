@@ -1,0 +1,28 @@
+bindingTables:
+  - t_user
+  - t_user_login
+broadcastTables:
+  - t_dict
+tables:
+  t_user:
+    actualDataNodes: dsSharding.t_user_$->{0..3}
+    keyGenerator:
+      column: id
+      type: SNOWFLAKE
+    logicTable: t_user
+    tableStrategy:
+      standard:
+        preciseAlgorithmClassName: cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm
+        shardingColumn: user_id
+  t_user_login:
+    actualDataNodes: dsSharding.t_user_login
+    keyGenerator:
+      column: id
+      props: {}
+      type: SNOWFLAKE
+    logicTable: t_user_login
+    tableStrategy:
+      standard:
+        preciseAlgorithmClassName: cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateRangeAlgorithm
+        rangeAlgorithmClassName: cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateRangeAlgorithm
+        shardingColumn: create_time

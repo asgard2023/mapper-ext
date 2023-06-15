@@ -14,10 +14,10 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource(value = {"classpath:spring/spring.xml"})
 @SpringBootApplication
 @EnableConfigurationProperties
-public class MysqlApplication {
-    public static final Logger logger = LoggerFactory.getLogger(MysqlApplication.class);
+public class MysqlDemoApplication {
+    public static final Logger logger = LoggerFactory.getLogger(MysqlDemoApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(MysqlApplication.class, args);
+        SpringApplication.run(MysqlDemoApplication.class, args);
     }
 }

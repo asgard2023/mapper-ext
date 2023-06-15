@@ -1,9 +1,10 @@
 package cn.org.opendfl.mysql.shardings.biz;
 
 import cn.hutool.core.date.DatePattern;
-import cn.org.opendfl.MysqlApplication;
+import cn.org.opendfl.MysqlDemoApplication;
 import cn.org.opendfl.base.MyPageInfo;
 import cn.org.opendfl.base.PageUtils;
+import cn.org.opendfl.sharding.auto.mapper.CommonMapper;
 import cn.org.opendfl.sharding.config.annotations.ShardingKey;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
 import cn.org.opendfl.shardings.biz.UserLoginBiz;
@@ -21,14 +22,27 @@ import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
 
-@SpringBootTest(classes = MysqlApplication.class)
+@SpringBootTest(classes = MysqlDemoApplication.class)
 @ActiveProfiles(value = "test")
 @Slf4j
 class UserLoginBizTest {
     @Resource
     private UserLoginBiz userLoginBiz;
 
+    @Resource
+    private CommonMapper commonMapper;
+
     static String[] FORMAT_DATETIME = new String[]{"yyyy-MM-dd HH:mm:ss"};
+
+    @Test
+    void existTable(){
+        int ifExist=commonMapper.existTable("ds_single", "t_user_login");
+        System.out.println(ifExist);
+        ifExist=commonMapper.existTable(null, "t_user_login");
+        System.out.println(ifExist);
+        ifExist=commonMapper.existTable(null, "t_user_login2");
+        System.out.println(ifExist);
+    }
 
     @Test
     void findById() throws Exception {

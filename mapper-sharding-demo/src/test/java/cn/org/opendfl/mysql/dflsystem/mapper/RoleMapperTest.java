@@ -1,7 +1,7 @@
 package cn.org.opendfl.mysql.dflsystem.mapper;
 
 
-import cn.org.opendfl.MysqlApplication;
+import cn.org.opendfl.MysqlDemoApplication;
 import cn.org.opendfl.mysql.dflsystem.po.DflRolePo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * @author chenjh
  */
-@SpringBootTest(classes = MysqlApplication.class)
+@SpringBootTest(classes = MysqlDemoApplication.class)
 @ActiveProfiles(value = "test")
 @Slf4j
 public class RoleMapperTest {

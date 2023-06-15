@@ -23,7 +23,7 @@ public class ShardingTablesLoadRunner {
 
     @PostConstruct
     public void run() throws Exception {
-
+        ShardingAlgorithmTool.setSchemaName(schemaName);
         // 给 分表工具类注入属性
         ShardingAlgorithmTool.setCommonMapper(commonMapper);
         // 调用缓存重载方法

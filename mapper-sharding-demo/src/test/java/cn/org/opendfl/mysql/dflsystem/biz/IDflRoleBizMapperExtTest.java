@@ -1,7 +1,7 @@
 package cn.org.opendfl.mysql.dflsystem.biz;
 
 import cn.hutool.json.JSONUtil;
-import cn.org.opendfl.MysqlApplication;
+import cn.org.opendfl.MysqlDemoApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import tk.mybatis.mapper.ext.vo.DataCountVo;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootTest(classes = MysqlApplication.class)
+@SpringBootTest(classes = MysqlDemoApplication.class)
 @ActiveProfiles(value = "test")
 @Slf4j
 public class IDflRoleBizMapperExtTest {

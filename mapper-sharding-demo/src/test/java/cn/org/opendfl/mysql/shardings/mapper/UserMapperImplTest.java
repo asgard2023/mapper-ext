@@ -1,7 +1,7 @@
 package cn.org.opendfl.mysql.shardings.mapper;
 
 
-import cn.org.opendfl.MysqlApplication;
+import cn.org.opendfl.MysqlDemoApplication;
 import cn.org.opendfl.shardings.mapper.UserMapper;
 import cn.org.opendfl.shardings.po.User;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * @author chenjh
  */
-@SpringBootTest(classes = MysqlApplication.class)
+@SpringBootTest(classes = MysqlDemoApplication.class)
 @ActiveProfiles(value = "test")
 @Slf4j
 public class UserMapperImplTest {
