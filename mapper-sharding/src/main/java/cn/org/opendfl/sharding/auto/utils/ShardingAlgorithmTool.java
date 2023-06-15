@@ -46,7 +46,7 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
         }
 
         synchronized (logicTableName.intern()) {
-            int exists = commonMapper.existTable(schemaName, logicTableName);
+            int exists = commonMapper.existTable(schemaName, resultTableName);
             //检查如果表已存在
             if(exists==1){
                 tableNameCache.add(resultTableName);
