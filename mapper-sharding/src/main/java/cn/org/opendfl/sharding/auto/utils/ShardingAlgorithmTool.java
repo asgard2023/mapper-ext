@@ -39,7 +39,7 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
      * @param resultTableName 真实表名
      * @return 确认存在于数据库中的真实表名
      */
-    public String shardingTablesCheckAndCreatAndReturn(String logicTableName, String resultTableName) {
+    public String shardingTablesCheckAndCreatAndReturn(final String logicTableName, final String resultTableName) {
         // 缓存中有此表 返回
         if (shardingTablesExistsCheck(resultTableName)) {
             return resultTableName;
