@@ -53,7 +53,7 @@ public class TbShardingKeyRangeAlgorithm implements RangeShardingAlgorithm<Date>
      * @throws ParseException
      * @author 510830970@qq.com
      */
-    private static List<String> getTableBetween(String dbName, String logicTableName, ShardingKeyVo shardingKeyVo, Date minDate, Date maxDate) {
+    public static List<String> getTableBetween(String dbName, String logicTableName, ShardingKeyVo shardingKeyVo, Date minDate, Date maxDate) {
         List<String> result = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat(shardingKeyVo.getDateFormat());//格式化为年月
         String tbDbName = "";

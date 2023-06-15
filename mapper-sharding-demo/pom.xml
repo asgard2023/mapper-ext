@@ -70,7 +70,7 @@
         <dependency>
             <groupId>cn.org.opendfl</groupId>
             <artifactId>mapper-sharding</artifactId>
-            <version>4.5</version>
+            <version>4.6</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

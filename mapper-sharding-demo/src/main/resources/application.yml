@@ -1,3 +1,5 @@
+db:
+  schema-name: ds_single
 
 mybatis-ext:
   #表的id属性名

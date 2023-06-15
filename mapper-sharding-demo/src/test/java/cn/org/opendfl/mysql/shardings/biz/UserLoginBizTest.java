@@ -161,6 +161,17 @@ class UserLoginBizTest {
     }
 
     @Test
+    void saveUserLogin2() throws Exception {
+        UserLogin user = new UserLogin();
+        user.setId(198L);
+        user.setCreateTime(new Date());
+        user.setLoginType("1");
+        user.setFuncCode("test");
+        int v = userLoginBiz.saveUserLogin(user);
+        Assertions.assertEquals(1, v, "saveUserLogin");
+    }
+
+    @Test
     void updateUserLogin() throws Exception {
         Long id = 100L;
         Date begin = DateUtils.parseDate("2022-12-30 01:00:00", DatePattern.NORM_DATETIME_PATTERN);

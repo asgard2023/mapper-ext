@@ -18,8 +18,9 @@
     <bean id="tableShardingAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm"/>
     <bean id="tableShardingDateAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateAlgorithm" />
     <bean id="tableShardingRangeAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyRangeAlgorithm" />
+    <bean id="tableShardingDateRangeAlgorithm" class="cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateRangeAlgorithm" />
     <sharding:standard-strategy id="tableShardingStrategy" sharding-column="user_id" precise-algorithm-ref="tableShardingAlgorithm"/>
-    <sharding:standard-strategy id="tableShardingDateStrategy" sharding-column="create_time" precise-algorithm-ref="tableShardingDateAlgorithm"  range-algorithm-ref="tableShardingRangeAlgorithm"/>
+    <sharding:standard-strategy id="tableShardingDateStrategy" sharding-column="create_time" precise-algorithm-ref="tableShardingDateRangeAlgorithm"  range-algorithm-ref="tableShardingDateRangeAlgorithm"/>
 
     <sharding:key-generator id="orderKeyGenerator" type="SNOWFLAKE" column="id"/>
 
@@ -83,5 +84,20 @@
     <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="cn.org.opendfl.shardings.mapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactorySharding"/>
+    </bean>
+
+    <bean id="sqlSessionFactoryShardingSingle"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dsSharding"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath*:mapper/CommonMapper.xml</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.org.opendfl.sharding.auto.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryShardingSingle"/>
     </bean>
 </beans>
