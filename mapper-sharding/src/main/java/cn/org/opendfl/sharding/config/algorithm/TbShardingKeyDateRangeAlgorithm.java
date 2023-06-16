@@ -1,6 +1,7 @@
 package cn.org.opendfl.sharding.config.algorithm;
 
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.org.opendfl.sharding.auto.utils.ShardingAlgorithmTool;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
@@ -37,6 +38,7 @@ public class TbShardingKeyDateRangeAlgorithm extends ShardingAlgorithmTool<Date>
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<Date> preciseShardingValue) {
         ShardingKeyVo shardingKeyDateVo = AnnotationUtils.getShardingKey(preciseShardingValue.getLogicTableName());
+        ThreadUtil.execAsync(()->autoCreateNext(shardingKeyDateVo, preciseShardingValue));
         autoCreateNext(shardingKeyDateVo, preciseShardingValue);
         Date shardingValueDate = preciseShardingValue.getValue();
         String realTableName = TbShardingKeyDateAlgorithm.getShardingRealTableName(null, preciseShardingValue.getLogicTableName(), shardingValueDate, shardingKeyDateVo);
