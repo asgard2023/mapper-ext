@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    ds-single:
+      type: com.alibaba.druid.pool.DruidDataSource
+      jdbcUrl: jdbc:mysql://192.168.0.40:3306/ds_single?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowMultiQueries=true
+      username: sharding
+      password: jh@123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds-sharding
+      ds-sharding:
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.0.40:3306/ds_single?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowMultiQueries=true
+        username: sharding
+        password: jh@123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    sharding:
+      bindingTables:
+        - t_user
+        - t_user_login
+      broadcastTables:
+        - t_dict
+      tables:
+        t_user:
+          actualDataNodes: ds-sharding.t_user_$->{0..3}
+          logicTable: t_user
+          tableStrategy:
+            standard:
+              preciseAlgorithmClassName: cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm
+              shardingColumn: user_id
+        t_user_login:
+          actualDataNodes: ds-sharding.t_user_login
+          logicTable: t_user_login
+          tableStrategy:
+            standard:
+              preciseAlgorithmClassName: cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateRangeAlgorithm
+              rangeAlgorithmClassName: cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateRangeAlgorithm
+              shardingColumn: create_time
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

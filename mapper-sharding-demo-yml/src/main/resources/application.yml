@@ -1,0 +1,35 @@
+db:
+  schema-name: ds_single
+
+spring:
+  application:
+    name: sharding-demo-yml
+  profiles:
+    active: sharding
+
+mybatis-ext:
+  #表的id属性名
+  idField: id
+  #表数据创建时间属性名
+  createTimeField: create_time
+  #表数据修改时间属性名
+  updateTimeField: modify_time
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    org:
+      ccs:
+        opendfl: DEBUG
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(-){faint} %clr([%14.14t]){faint} %clr(%-40.40logger.%13.13M){cyan} %clr(%3.3L) %clr(:){faint} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+
