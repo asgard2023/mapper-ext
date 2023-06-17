@@ -1,14 +1,13 @@
 package cn.org.opendfl.sharding.config.algorithm;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.org.opendfl.sharding.auto.utils.ShardingAlgorithmTool;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
 import com.google.common.collect.Range;
-
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
 import org.apache.shardingsphere.api.sharding.standard.RangeShardingValue;
 
@@ -24,7 +23,7 @@ public class TbShardingKeyDateRangeAlgorithm extends ShardingAlgorithmTool<Date>
     private static Set<String> tableNextDateSet = new ConcurrentSkipListSet<>();
     private void autoCreateNext(ShardingKeyVo shardingKeyDateVo, PreciseShardingValue<Date> preciseShardingValue){
         Date shardingValueDate = preciseShardingValue.getValue();
-        shardingValueDate = DateUtils.addDays(shardingValueDate, 1);
+        shardingValueDate = DateUtil.offsetDay(shardingValueDate, 1);
         String realTableNameNext = TbShardingKeyDateAlgorithm.getShardingRealTableName(null, preciseShardingValue.getLogicTableName(), shardingValueDate, shardingKeyDateVo);
         if(!tableNextDateSet.contains(realTableNameNext)){
             String routeTable = shardingTablesCheckAndCreatAndReturn(preciseShardingValue.getLogicTableName(), realTableNameNext);
