@@ -2,16 +2,16 @@ package cn.org.opendfl.sharding.auto.mapper;
 
 
 import cn.org.opendfl.sharding.auto.po.CreateTableSql;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import tk.mybatis.mapper.common.MapperMy;
 
 import java.util.List;
 
 /**
  * 常用工具 mapper
  */
-public interface CommonMapper extends MapperMy<CreateTableSql> {
+public interface CommonMapper extends Mapper {
 
     /**
      * 查询数据库中的所有表名
