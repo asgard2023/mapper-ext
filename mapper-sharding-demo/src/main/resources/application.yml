@@ -1,6 +1,10 @@
 db:
   schema-name: ds_single
 
+spring:
+  application:
+    name: sharding-demo
+
 mybatis-ext:
   #表的id属性名
   idField: id

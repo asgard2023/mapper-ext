@@ -18,7 +18,7 @@
     <bean id="sqlSessionFactorySingle"
           class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dsSingle"/>
-        <property name="mapperLocations" value="classpath*:mappers/**/*.xml"/>
+        <property name="mapperLocations" value="classpath*:mappers/dflsystem/*.xml"/>
 
     </bean>
 

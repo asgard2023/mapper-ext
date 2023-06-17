@@ -64,7 +64,7 @@
 
     <bean id="sqlSessionFactorySharding" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="shardingDataSource"/>
-        <property name="mapperLocations" value="classpath*:mappers/**/*.xml"/>
+        <property name="mapperLocations" value="classpath*:mappers/shardings/*.xml"/>
         <!--        <property name="plugins">-->
         <!--            <array>-->
         <!--                <bean id="pageInterceptor" class="com.github.pagehelper.PageInterceptor">-->
