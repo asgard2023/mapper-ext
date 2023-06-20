@@ -37,7 +37,7 @@ public class UserPo implements Serializable {
 	/**
 	 * userId
 	 */
-	@ShardingKey(shardCount = 4, tablePrefix = "t_user_")
+	@ShardingKey(shardTableCount = 4, tablePrefix = "t_user_")
 	private Long userId;
 
 	/**

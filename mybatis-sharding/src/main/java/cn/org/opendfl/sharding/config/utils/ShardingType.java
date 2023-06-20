@@ -12,7 +12,13 @@ public enum ShardingType {
      * 日期，按月/天等
      */
     DATE(2, ShardingDateType.DATETIME.getType()),
+    /**
+     * 按月
+     */
     MONTH(3, ShardingDateType.DATETIME.getType()),
+    /**
+     * 按年
+     */
     YEAR(4, ShardingDateType.DATETIME.getType());
     private final int type;
     private final int dateType;

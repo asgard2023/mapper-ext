@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
- * 常用工具 mapper
+ * 简单通用 mapper
  */
 public interface CommonMapper extends Mapper {
 

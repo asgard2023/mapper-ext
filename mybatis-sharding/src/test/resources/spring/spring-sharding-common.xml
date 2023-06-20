@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:sharding="http://shardingsphere.apache.org/schema/shardingsphere/sharding" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://shardingsphere.apache.org/schema/shardingsphere/sharding 
+                        http://shardingsphere.apache.org/schema/shardingsphere/sharding/sharding.xsd 
+                        ">
+    <!-- <import resource="classpath:META-INF/shardingTransaction.xml"/> -->
+
+    <bean id="dsSharding" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url"  value="jdbc:mysql://192.168.0.40:3306/ds_single?allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowMultiQueries=true"/>
+        <property name="username" value="sharding"/>
+        <property name="password" value="jh@123456"/>
+    </bean>
+
+
+    <bean id="sqlSessionFactoryShardingSingle"
+          class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+        <property name="dataSource" ref="dsSharding"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath*:mapper/sharding/CommonMapper.xml</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.org.opendfl.sharding.auto.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryShardingSingle"/>
+    </bean>
+</beans>

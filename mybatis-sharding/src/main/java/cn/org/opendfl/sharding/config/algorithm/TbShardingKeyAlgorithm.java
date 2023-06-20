@@ -1,6 +1,8 @@
 package cn.org.opendfl.sharding.config.algorithm;
 
 
+
+
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
@@ -24,9 +26,9 @@ public class TbShardingKeyAlgorithm implements PreciseShardingAlgorithm<Long> {
             throw new UnsupportedOperationException();
         }
         ShardingKeyVo shardingKeyVo = AnnotationUtils.getShardingKey(shardingValue.getLogicTableName());
-        //分片数shardCount=0，走shardingjdbc配置，并默认固定4个分片(建议走另外的分片实现类)
-        if (shardingKeyVo.getShardCount() == 0) {
-            long tbIdx = Long.parseLong("" + shardingValue.getValue()) % 4;
+        //分片数shardTableCount=0，走shardingjdbc配置，并默认固定4个分片(建议走另外的分片实现类)
+        if (shardingKeyVo.getShardTableCount() == 0) {
+            long tbIdx = shardingValue.getValue() % 4;
             for (String each : tableNames) {
                 if (each.endsWith(tbIdx + "")) {
                     return each;
@@ -38,10 +40,10 @@ public class TbShardingKeyAlgorithm implements PreciseShardingAlgorithm<Long> {
     }
 
     public static String getShardingRealTableName(String dbName, String logicTableName, Long shardingValue, ShardingKeyVo shardingKeyVo) {
-        Long tbIdx = Long.parseLong("" + shardingValue) % shardingKeyVo.getShardCount();
+        Long tbIdx = shardingValue % shardingKeyVo.getShardTableCount();
         //用于支持值为负数的情况
         if (tbIdx < 0) {
-            tbIdx += shardingKeyVo.getShardCount();
+            tbIdx += shardingKeyVo.getShardTableCount();
         }
         return getShardingRealTableName(dbName, logicTableName, shardingKeyVo, tbIdx.intValue());
     }

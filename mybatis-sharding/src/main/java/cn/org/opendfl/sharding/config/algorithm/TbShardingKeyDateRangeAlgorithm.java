@@ -21,9 +21,15 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Slf4j
 public class TbShardingKeyDateRangeAlgorithm extends ShardingAlgorithmTool<Date> {
     private static Set<String> tableNextDateSet = new ConcurrentSkipListSet<>();
+
+    /**
+     * 可提前3天自动创建新表
+     * @param shardingKeyDateVo
+     * @param preciseShardingValue
+     */
     private void autoCreateNext(ShardingKeyVo shardingKeyDateVo, PreciseShardingValue<Date> preciseShardingValue){
         Date shardingValueDate = preciseShardingValue.getValue();
-        shardingValueDate = DateUtil.offsetDay(shardingValueDate, 1);
+        shardingValueDate = DateUtil.offsetDay(shardingValueDate, 3);
         String realTableNameNext = TbShardingKeyDateAlgorithm.getShardingRealTableName(null, preciseShardingValue.getLogicTableName(), shardingValueDate, shardingKeyDateVo);
         if(!tableNextDateSet.contains(realTableNameNext)){
             String routeTable = shardingTablesCheckAndCreatAndReturn(preciseShardingValue.getLogicTableName(), realTableNameNext);
@@ -59,10 +65,7 @@ public class TbShardingKeyDateRangeAlgorithm extends ShardingAlgorithmTool<Date>
         Date upperEnd = valueRange.upperEndpoint();
         Set<String> routTables = new HashSet<>();
         if (lowerEnd != null && upperEnd != null) {
-            List<String> rangeNameList = TbShardingKeyRangeAlgorithm.getTableBetween(null, rangeShardingValue.getLogicTableName(), shardingKeyDateVo, lowerEnd, upperEnd);
-            for (String tableName : rangeNameList) {
-                shardingTablesCheckAndCreatAndReturn(rangeShardingValue.getLogicTableName(), tableName);
-            }
+            List<String> rangeNameList = AnnotationUtils.getTableBetween(null, rangeShardingValue.getLogicTableName(), shardingKeyDateVo, lowerEnd, upperEnd);
             routTables.addAll(rangeNameList);
         } else {
             routTables.addAll(availableTargetNames);

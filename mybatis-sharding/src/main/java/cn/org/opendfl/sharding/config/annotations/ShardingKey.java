@@ -1,5 +1,9 @@
 package cn.org.opendfl.sharding.config.annotations;
 
+
+
+
+
 import cn.org.opendfl.sharding.config.utils.ShardingType;
 
 import java.lang.annotation.ElementType;
@@ -29,12 +33,19 @@ public @interface ShardingKey {
      */
     String dateFormat() default "yyMM";
     /**
-     * 分片数shardCount=0，走shardingjdbc配置，并默认固定4个分片(建议走另外的分片实现类)
-     * 分片表=逻辑表_分片值，exp: t_user对应的分片表t_user_{0..shardCount}
+     * 分表分片数shardTableCount=0，走shardingjdbc配置，并默认固定4个分片(建议走另外的分片实现类)
+     * 分片表=逻辑表_分片值，exp: t_user对应的分片表t_user_{0..shardTableCount}
      *
      * @return
      */
-    int shardCount() default 0;
+    int shardTableCount() default 0;
+
+    /**
+     * 分库分片数shardDbCount=0, 且dbPrefix不为空，表示是单库模式，库名就是dbPrefix
+     * 分库分片数shardDbCount=0, 且dbPrefix为空，取库集合第1个
+     * @return
+     */
+    int shardDbCount() default 0;
 
     /**
      * 预留，未用
@@ -50,4 +61,12 @@ public @interface ShardingKey {
      * @return
      */
     String tablePrefix() default "";
+
+    /**
+     * 真实库前缀，比如ds_
+     * @return
+     */
+    String dbPrefix() default "";
+
+    String minDate() default "";
 }

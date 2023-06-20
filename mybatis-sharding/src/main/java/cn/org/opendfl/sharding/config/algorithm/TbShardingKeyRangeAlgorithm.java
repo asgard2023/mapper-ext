@@ -1,6 +1,7 @@
 package cn.org.opendfl.sharding.config.algorithm;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
 import cn.org.opendfl.sharding.config.utils.AnnotationUtils;
@@ -35,7 +36,7 @@ public class TbShardingKeyRangeAlgorithm implements RangeShardingAlgorithm<Date>
         Date upperEnd = valueRange.upperEndpoint();
         Set<String> routTables = new HashSet<>();
         if (lowerEnd != null && upperEnd != null) {
-            List<String> rangeNameList = getTableBetween(null, rangeShardingValue.getLogicTableName(), shardingKeyDateVo, lowerEnd, upperEnd);
+            List<String> rangeNameList = AnnotationUtils.getTableBetween(null, rangeShardingValue.getLogicTableName(), shardingKeyDateVo, lowerEnd, upperEnd);
             routTables.addAll(rangeNameList);
         } else {
             routTables.addAll(tableNames);
@@ -44,31 +45,6 @@ public class TbShardingKeyRangeAlgorithm implements RangeShardingAlgorithm<Date>
         return routTables;
     }
 
-    /**
-     * 获得两个日期之间的所有月份
-     *
-     * @param minDate
-     * @param maxDate
-     * @return
-     * @throws ParseException
-     * @author 510830970@qq.com
-     */
-    public static List<String> getTableBetween(String dbName, String logicTableName, ShardingKeyVo shardingKeyVo, Date minDate, Date maxDate) {
-        List<String> result = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat(shardingKeyVo.getDateFormat());//格式化为年月
-        String tbDbName = "";
-        if (CharSequenceUtil.isNotBlank(dbName)) {
-            tbDbName = dbName + ".";
-        }
-        String tablePrefix = ShardingTableUtils.getTablePrefix(shardingKeyVo.getTablePrefix(), logicTableName);
-        ShardingType shardingType = ShardingType.parse(shardingKeyVo.getShardingType());
-        Date curr = minDate;
-        while (curr.before(maxDate)) {
-            String table = tbDbName + tablePrefix + sdf.format(curr.getTime());
-            result.add(table);
-            curr = ShardingTableUtils.addDateByType(curr, 1, shardingType);
-        }
-        return result;
-    }
+
 
 }

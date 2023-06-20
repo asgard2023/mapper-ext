@@ -1,15 +1,24 @@
 package cn.org.opendfl.sharding.config.utils;
 
+
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm;
 import cn.org.opendfl.sharding.config.algorithm.TbShardingKeyDateAlgorithm;
 import cn.org.opendfl.sharding.config.annotations.ShardingKey;
 import cn.org.opendfl.sharding.config.annotations.ShardingKeyVo;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,6 +32,29 @@ public class AnnotationUtils {
      * map缓存大小，如果要分表的数据表很多，可以加大这个值
      */
     public static final int INIT_CACHE_SIZE = 32;
+    private static MybatisType mybatisType = MybatisType.MYBATIS_PLUS;
+    private static Date minDate = DateUtil.offsetMonth(new Date(), -120);
+
+    public static void setMybatisType(String mybatisType) {
+        MybatisType mybatisTypeEnum = MybatisType.parse(mybatisType);
+        if (mybatisTypeEnum != null) {
+            AnnotationUtils.mybatisType = mybatisTypeEnum;
+        } else {
+            log.warn("----setMybatisType--mybatisType={} invalid", mybatisType);
+        }
+    }
+
+    public static void setMinDate(String minDate) {
+        if (CharSequenceUtil.isBlank(minDate)) {
+            return;
+        }
+        Date minDateValue = DateUtil.parseDate(minDate);
+        if (minDateValue != null) {
+            AnnotationUtils.minDate = minDateValue;
+        } else {
+            log.warn("----setMinDate--minDate={} invalid", minDate);
+        }
+    }
 
     /**
      * 用于初始化，以免加载时才去初始化
@@ -47,14 +79,19 @@ public class AnnotationUtils {
         String idField = idFieldMap.computeIfAbsent(className, k -> {
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
-                Id idFieldClass = field.getAnnotation(Id.class);
-                if (idFieldClass != null) {
+                Object idClass = null;
+                if (mybatisType == MybatisType.MYBATIS_MAPPER) {
+                    idClass = field.getAnnotation(Id.class);
+                } else {
+                    idClass = field.getAnnotation(TableId.class);
+                }
+                if (idClass != null) {
                     return field.getName();
                 }
             }
             return "none";
         });
-        return "none".equals(idField)?null:idField;
+        return "none".equals(idField) ? null : idField;
     }
 
     private static Map<String, ShardingKeyVo> shardingKeyFieldMap = new ConcurrentHashMap<>(INIT_CACHE_SIZE);
@@ -68,7 +105,7 @@ public class AnnotationUtils {
     public static String getShardingKeyField(Class clazz) {
         String className = clazz.getName();
         String tableName = getTableName(clazz);
-        if(tableName==null){
+        if (tableName == null) {
             return null;
         }
 
@@ -82,7 +119,7 @@ public class AnnotationUtils {
             }
             return new ShardingKeyVo();
         });
-        if (shardingKeyField.getField()==null) {
+        if (shardingKeyField.getField() == null) {
             return null;
         }
 
@@ -106,12 +143,22 @@ public class AnnotationUtils {
     public static String getTableName(Class clazz) {
         String className = clazz.getName();
         return tableFieldMap.computeIfAbsent(className, k -> {
-            Table table = (Table) clazz.getAnnotation(Table.class);
-            if (table == null) {
+            Object tableClass = null;
+            String tableName = null;
+            if (mybatisType == MybatisType.MYBATIS_MAPPER) {
+                Table table = (Table) clazz.getAnnotation(Table.class);
+                tableClass = table;
+                tableName = table.name();
+            } else {
+                TableName table = (TableName) clazz.getAnnotation(TableName.class);
+                tableClass = table;
+                tableName = table.value();
+            }
+            if (tableClass == null) {
                 return null;
             }
-            log.debug("getTableName-className={} table={}", className, table.name());
-            return table.name();
+            log.debug("getTableName-className={} tableName={}", className, tableName);
+            return tableName;
         });
     }
 
@@ -153,6 +200,45 @@ public class AnnotationUtils {
         String tableName = AnnotationUtils.getTableName(entityClass);
         ShardingKeyVo shardingKeyVo = AnnotationUtils.getShardingKey(tableName);
         return TbShardingKeyDateAlgorithm.getShardingRealTableName(dbName, tableName, shardingValueDate, shardingKeyVo);
+    }
+
+    /**
+     * 获得两个日期之间的所有月份
+     *
+     * @param minDate
+     * @param maxDate
+     * @return
+     * @throws ParseException
+     * @author 510830970@qq.com
+     */
+    public static List<String> getTableBetween(String dbName, String logicTableName, ShardingKeyVo shardingKeyVo, Date minDate, Date maxDate) {
+        List<String> result = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat(shardingKeyVo.getDateFormat());//格式化为年月
+        String tbDbName = "";
+        if (CharSequenceUtil.isNotBlank(dbName)) {
+            tbDbName = dbName + ".";
+        }
+        String tablePrefix = ShardingTableUtils.getTablePrefix(shardingKeyVo.getTablePrefix(), logicTableName);
+        ShardingType shardingType = ShardingType.parse(shardingKeyVo.getShardingType());
+        Date curr = minDate;
+        Date now = new Date();
+        now = DateUtil.offsetDay(now, 1);
+        //minDate以shardKey的配置为优先
+        final Date limitMinDate = shardingKeyVo.getMinDate() != null ? shardingKeyVo.getMinDate() : AnnotationUtils.minDate;
+        while (curr.before(maxDate)) {
+            String table = tbDbName + tablePrefix + sdf.format(curr.getTime());
+            curr = ShardingTableUtils.addDateByType(curr, 1, shardingType);
+            //避免过低的时间表名
+            if (curr.before(limitMinDate)) {
+                continue;
+            }
+            result.add(table);
+            //curr>now表示超过当前时间，则停止
+            if (curr.after(now)) {
+                break;
+            }
+        }
+        return result;
     }
 }
 

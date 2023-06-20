@@ -1,6 +1,7 @@
 package cn.org.opendfl.sharding.auto.utils;
 
 
+
 import cn.org.opendfl.sharding.auto.mapper.CommonMapper;
 import cn.org.opendfl.sharding.auto.po.CreateTableSql;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,11 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
     public static void setCommonMapper(CommonMapper commonMapper) {
         ShardingAlgorithmTool.commonMapper = commonMapper;
     }
-    public static void setSchemaName(String schemaName){
-        ShardingAlgorithmTool.schemaName=schemaName;
+
+    public static void setSchemaName(String schemaName) {
+        ShardingAlgorithmTool.schemaName = schemaName;
+        //调用缓存重载方法
+        tableNameCacheReload(schemaName);
     }
 
     /**
@@ -48,10 +52,9 @@ public abstract class ShardingAlgorithmTool<T extends Comparable<?>> implements 
         synchronized (logicTableName.intern()) {
             int exists = commonMapper.existTable(schemaName, resultTableName);
             //检查如果表已存在
-            if(exists==1){
+            if (exists == 1) {
                 tableNameCache.add(resultTableName);
-            }
-            else {
+            } else {
                 // 缓存中无此表 建表 并添加缓存
                 CreateTableSql createTableSql = commonMapper.selectTableCreateSql(logicTableName);
                 String sql = createTableSql.getCreateTable();
