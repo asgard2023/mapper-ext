@@ -1,6 +1,7 @@
 package cn.org.opendfl.sharding.config.utils;
 
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.org.opendfl.sharding.config.algorithm.TbShardingKeyAlgorithm;
@@ -202,6 +203,30 @@ public class AnnotationUtils {
         return TbShardingKeyDateAlgorithm.getShardingRealTableName(dbName, tableName, shardingValueDate, shardingKeyVo);
     }
 
+
+    /**
+     * 获取时间的结尾时间
+     *
+     * @param date
+     * @param shardingType
+     * @return
+     */
+    public static Date getDateEnd(Date date, ShardingType shardingType) {
+        if (ShardingType.MONTH == shardingType) {
+            date = DateUtil.offsetMonth(date, 1);
+            date = DateUtil.truncate(date, DateField.MONTH);
+        } else if (ShardingType.YEAR == shardingType) {
+            date = DateUtil.offsetMonth(date, 12);
+            date = DateUtil.truncate(date, DateField.YEAR);
+        } else {
+            date = DateUtil.offsetDay(date, 1);
+            date = DateUtil.truncate(date, DateField.HOUR);
+            date.setHours(0);
+        }
+        return date;
+    }
+
+
     /**
      * 获得两个日期之间的所有月份
      *
@@ -222,10 +247,11 @@ public class AnnotationUtils {
         ShardingType shardingType = ShardingType.parse(shardingKeyVo.getShardingType());
         Date curr = minDate;
         Date now = new Date();
-        now = DateUtil.offsetDay(now, 1);
+        now = getDateEnd(now, shardingType);
         //minDate以shardKey的配置为优先
         final Date limitMinDate = shardingKeyVo.getMinDate() != null ? shardingKeyVo.getMinDate() : AnnotationUtils.minDate;
-        while (curr.before(maxDate)) {
+        final Date maxDateDate = getDateEnd(maxDate, shardingType);
+        while (curr.before(maxDateDate)) {
             String table = tbDbName + tablePrefix + sdf.format(curr.getTime());
             curr = ShardingTableUtils.addDateByType(curr, 1, shardingType);
             //避免过低的时间表名
